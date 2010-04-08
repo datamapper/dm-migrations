@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-ADAPTERS.each do |adapter|
+DataMapper::Spec::AdapterHelpers.available_adapters.each do |adapter|
   describe "Using Adapter #{adapter}, " do
     describe DataMapper::Migration, 'interface' do
       before do
@@ -50,10 +50,10 @@ ADAPTERS.each do |adapter|
       end
 
       expected_module = {
-        :sqlite3  => lambda { SQL::Sqlite3 },
+        :sqlite3  => lambda { SQL::Sqlite },
         :mysql    => lambda { SQL::Mysql },
         :postgres => lambda { SQL::Postgresql }
-      }[adapter][]
+      }[adapter.to_sym][]
 
       it "should extend with #{expected_module} when adapter is #{adapter}" do
         migration = DataMapper::Migration.new(1, :"#{adapter}_adapter_test", :database => adapter) { }

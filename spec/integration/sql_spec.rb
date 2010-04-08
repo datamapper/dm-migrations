@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-ADAPTERS.each do |adapter|
+DataMapper::Spec::AdapterHelpers.available_adapters.each do |adapter|
   describe "Using Adapter #{adapter}," do
 
     def repository(*args)

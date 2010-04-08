@@ -22,7 +22,7 @@ module DataMapper
       @adapter = @database.adapter
 
       case @adapter.class.to_s
-      when /Sqlite3/  then @adapter.extend(SQL::Sqlite3)
+      when /Sqlite/   then @adapter.extend(SQL::Sqlite)
       when /Mysql/    then @adapter.extend(SQL::Mysql)
       when /Postgres/ then @adapter.extend(SQL::Postgresql)
       else

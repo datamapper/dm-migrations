@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 # a dummy class to include the module into
-class Sqlite3Extension
-  include SQL::Sqlite3
+class SqliteExtension
+  include SQL::Sqlite
 end
 
 describe "SQLite3 Extensions" do
   before do
-    @se = Sqlite3Extension.new
+    @se = SqliteExtension.new
   end
 
   it 'should support schema-level transactions' do
@@ -20,7 +20,7 @@ describe "SQLite3 Extensions" do
 
   it 'should create a table object from the name' do
     table = mock('SQLite3 Table')
-    SQL::Sqlite3::Table.should_receive(:new).with(@se, 'users').and_return(table)
+    SQL::Sqlite::Table.should_receive(:new).with(@se, 'users').and_return(table)
 
     @se.table('users').should == table
   end
@@ -50,22 +50,22 @@ describe "SQLite3 Extensions" do
     end
 
     it 'should initialize columns by querying the table' do
-      SQL::Sqlite3::Column.should_receive(:new).with(@cs1).and_return(@col1)
-      SQL::Sqlite3::Column.should_receive(:new).with(@cs2).and_return(@col2)
+      SQL::Sqlite::Column.should_receive(:new).with(@cs1).and_return(@col1)
+      SQL::Sqlite::Column.should_receive(:new).with(@cs2).and_return(@col2)
       @adapter.should_receive(:table_info).with('users').and_return([@cs1,@cs2])
-      SQL::Sqlite3::Table.new(@adapter, 'users')
+      SQL::Sqlite::Table.new(@adapter, 'users')
     end
 
     it 'should create SQLite3 Column objects from the returned column structs' do
-      SQL::Sqlite3::Column.should_receive(:new).with(@cs1).and_return(@col1)
-      SQL::Sqlite3::Column.should_receive(:new).with(@cs2).and_return(@col2)
-      SQL::Sqlite3::Table.new(@adapter, 'users')
+      SQL::Sqlite::Column.should_receive(:new).with(@cs1).and_return(@col1)
+      SQL::Sqlite::Column.should_receive(:new).with(@cs2).and_return(@col2)
+      SQL::Sqlite::Table.new(@adapter, 'users')
     end
 
     it 'should set the @columns to the looked-up columns' do
-      SQL::Sqlite3::Column.should_receive(:new).with(@cs1).and_return(@col1)
-      SQL::Sqlite3::Column.should_receive(:new).with(@cs2).and_return(@col2)
-      t = SQL::Sqlite3::Table.new(@adapter, 'users')
+      SQL::Sqlite::Column.should_receive(:new).with(@cs1).and_return(@col1)
+      SQL::Sqlite::Column.should_receive(:new).with(@cs2).and_return(@col2)
+      t = SQL::Sqlite::Table.new(@adapter, 'users')
       t.columns.should == [ @col1, @col2 ]
     end
 
@@ -79,7 +79,7 @@ describe "SQLite3 Extensions" do
                  :dflt_value => 123,
                  :pk         => true,
                  :notnull    => 0)
-      @c = SQL::Sqlite3::Column.new(@cs)
+      @c = SQL::Sqlite::Column.new(@cs)
     end
 
     it 'should set the name from the name value' do

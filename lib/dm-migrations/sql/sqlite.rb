@@ -1,14 +1,14 @@
 require 'dm-migrations/sql/table'
 
 module SQL
-  module Sqlite3
+  module Sqlite
 
     def supports_schema_transactions?
       true
     end
 
     def table(table_name)
-      SQL::Sqlite3::Table.new(self, table_name)
+      SQL::Sqlite::Table.new(self, table_name)
     end
 
     def recreate_database
@@ -29,7 +29,7 @@ module SQL
       def initialize(adapter, table_name)
         @columns = []
         adapter.table_info(table_name).each do |col_struct|
-          @columns << SQL::Sqlite3::Column.new(col_struct)
+          @columns << SQL::Sqlite::Column.new(col_struct)
         end
       end
     end

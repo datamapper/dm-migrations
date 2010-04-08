@@ -1,30 +1,28 @@
-require 'rubygems'
-
-# use local dm-core if running from a typical dev checkout.
-lib = File.join('..', '..', 'dm-core', 'lib')
-$LOAD_PATH.unshift(lib) if File.directory?(lib)
-
-# Support running specs with 'rake spec' and 'spec'
-$LOAD_PATH.unshift('lib') unless $LOAD_PATH.include?('lib')
-
 require 'dm-migrations'
 require 'dm-migrations/migration_runner'
 
-ADAPTERS = []
-def load_driver(name, default_uri)
-  begin
-    DataMapper.setup(name, default_uri)
-    DataMapper::Repository.adapters[:default] =  DataMapper::Repository.adapters[name]
-    ADAPTERS << name
-    true
-  rescue LoadError => e
-    warn "Could not load do_#{name}: #{e}"
-    false
+require 'dm-core/spec/lib/spec_helper'
+require 'dm-core/spec/lib/adapter_helpers'
+
+ENV['ADAPTERS'] ||= 'sqlite3'
+
+# create sqlite3_fs directory if it doesn't exist
+temp_db_dir = Pathname(File.expand_path('../db', __FILE__))
+temp_db_dir.mkpath
+
+DataMapper::Spec::AdapterHelpers.temp_db_dir = temp_db_dir
+
+adapters  = ENV['ADAPTERS'].split(' ').map { |adapter_name| adapter_name.strip.downcase }.uniq
+adapters  = DataMapper::Spec::AdapterHelpers.primary_adapters.keys if adapters.include?('all')
+
+DataMapper::Spec::AdapterHelpers.setup_adapters(adapters)
+
+Spec::Runner.configure do |config|
+
+  config.extend(DataMapper::Spec::AdapterHelpers)
+
+  config.after :all do
+    DataMapper::Spec.cleanup_models
   end
+
 end
-
-ENV['ADAPTER'] ||= 'sqlite3'
-
-load_driver(:sqlite3,  'sqlite3::memory:')
-load_driver(:mysql,    'mysql://localhost/dm_core_test')
-load_driver(:postgres, 'postgres://postgres@localhost/dm_core_test')

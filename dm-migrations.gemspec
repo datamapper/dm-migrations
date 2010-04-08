@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Sadauskas"]
-  s.date = %q{2010-03-22}
+  s.date = %q{2010-04-08}
   s.description = %q{DataMapper plugin for writing and speccing migrations}
   s.email = %q{psadauskas [a] gmail [d] com}
   s.extra_rdoc_files = [
@@ -17,7 +17,8 @@ Gem::Specification.new do |s|
      "README.rdoc"
   ]
   s.files = [
-    "Gemfile",
+    ".gitignore",
+     "Gemfile",
      "LICENSE",
      "README.rdoc",
      "Rakefile",
@@ -29,18 +30,26 @@ Gem::Specification.new do |s|
      "examples/sample_migration.rb",
      "examples/sample_migration_spec.rb",
      "lib/dm-migrations.rb",
+     "lib/dm-migrations/adapters/dm-do-adapter.rb",
+     "lib/dm-migrations/adapters/dm-mysql-adapter.rb",
+     "lib/dm-migrations/adapters/dm-oracle-adapter.rb",
+     "lib/dm-migrations/adapters/dm-postgres-adapter.rb",
+     "lib/dm-migrations/adapters/dm-sqlite-adapter.rb",
+     "lib/dm-migrations/adapters/dm-sqlserver-adapter.rb",
+     "lib/dm-migrations/auto_migration.rb",
      "lib/dm-migrations/migration.rb",
      "lib/dm-migrations/migration_runner.rb",
      "lib/dm-migrations/sql.rb",
      "lib/dm-migrations/sql/column.rb",
      "lib/dm-migrations/sql/mysql.rb",
      "lib/dm-migrations/sql/postgresql.rb",
-     "lib/dm-migrations/sql/sqlite3.rb",
+     "lib/dm-migrations/sql/sqlite.rb",
      "lib/dm-migrations/sql/table.rb",
      "lib/dm-migrations/sql/table_creator.rb",
      "lib/dm-migrations/sql/table_modifier.rb",
      "lib/spec/example/migration_example_group.rb",
      "lib/spec/matchers/migration_matchers.rb",
+     "spec/integration/auto_migration_spec.rb",
      "spec/integration/migration_runner_spec.rb",
      "spec/integration/migration_spec.rb",
      "spec/integration/sql_spec.rb",
@@ -50,7 +59,7 @@ Gem::Specification.new do |s|
      "spec/unit/migration_spec.rb",
      "spec/unit/sql/column_spec.rb",
      "spec/unit/sql/postgresql_spec.rb",
-     "spec/unit/sql/sqlite3_extensions_spec.rb",
+     "spec/unit/sql/sqlite_extensions_spec.rb",
      "spec/unit/sql/table_creator_spec.rb",
      "spec/unit/sql/table_modifier_spec.rb",
      "spec/unit/sql/table_spec.rb",
@@ -67,6 +76,23 @@ Gem::Specification.new do |s|
   s.rubyforge_project = %q{datamapper}
   s.rubygems_version = %q{1.3.6}
   s.summary = %q{DataMapper plugin for writing and speccing migrations}
+  s.test_files = [
+    "spec/integration/auto_migration_spec.rb",
+     "spec/integration/migration_runner_spec.rb",
+     "spec/integration/migration_spec.rb",
+     "spec/integration/sql_spec.rb",
+     "spec/spec_helper.rb",
+     "spec/unit/migration_spec.rb",
+     "spec/unit/sql/column_spec.rb",
+     "spec/unit/sql/postgresql_spec.rb",
+     "spec/unit/sql/sqlite_extensions_spec.rb",
+     "spec/unit/sql/table_creator_spec.rb",
+     "spec/unit/sql/table_modifier_spec.rb",
+     "spec/unit/sql/table_spec.rb",
+     "spec/unit/sql_spec.rb",
+     "examples/sample_migration.rb",
+     "examples/sample_migration_spec.rb"
+  ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION

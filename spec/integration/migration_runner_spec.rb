@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-ADAPTERS.each do |adapter|
+DataMapper::Spec::AdapterHelpers.available_adapters.each do |adapter|
   describe "Using Adapter #{adapter}, " do
     describe 'empty migration runner' do
       it "should return an empty array if no migrations have been defined" do
@@ -11,6 +11,8 @@ ADAPTERS.each do |adapter|
     describe 'migration runnner' do
       # set up some 'global' setup and teardown tasks
       before(:each) do
+        # FIXME workaround because dm-migrations can only handle the :default repo
+        DataMapper::Repository.adapters[:default] =  DataMapper::Repository.adapters[adapter.to_sym]
         migration( 1, :create_people_table) { }
       end
 
