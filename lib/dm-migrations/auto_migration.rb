@@ -192,7 +192,9 @@ module DataMapper
           adapter = const_get(const_name)
           adapter.send(:include, DataMapper::Migrations.const_get(const_name))
         end
-
+      rescue LoadError
+        # do nothing
+      ensure
         super
       end
 
