@@ -187,12 +187,20 @@ module DataMapper
 
       # @api private
       def const_added(const_name)
+        require auto_migration_extensions(const_name)
         if DataMapper::Migrations.const_defined?(const_name)
           adapter = const_get(const_name)
           adapter.send(:include, DataMapper::Migrations.const_get(const_name))
         end
 
         super
+      end
+
+      # @api private
+      def auto_migration_extensions(const_name)
+        name = const_name.to_s.gsub('Adapter','').downcase
+        adapter_name = name == 'dataobjects' ? 'do' : name
+        "dm-migrations/adapters/dm-#{adapter_name}-adapter"
       end
 
     end
