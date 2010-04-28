@@ -201,7 +201,7 @@ module DataMapper
       # @api private
       def auto_migration_extensions(const_name)
         name = const_name.to_s.gsub('Adapter','').downcase
-        adapter_name = name == 'dataobjects' ? 'do' : name
+        adapter_name = (name == 'dataobjects') ? 'do' : name
         "dm-migrations/adapters/dm-#{adapter_name}-adapter"
       end
 
