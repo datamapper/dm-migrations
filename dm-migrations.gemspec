@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Sadauskas"]
-  s.date = %q{2010-04-08}
+  s.date = %q{2010-04-30}
   s.description = %q{DataMapper plugin for writing and speccing migrations}
   s.email = %q{psadauskas [a] gmail [d] com}
   s.extra_rdoc_files = [
@@ -42,7 +42,6 @@ Gem::Specification.new do |s|
      "lib/dm-migrations/sql.rb",
      "lib/dm-migrations/sql/column.rb",
      "lib/dm-migrations/sql/mysql.rb",
-     "lib/dm-migrations/sql/postgresql.rb",
      "lib/dm-migrations/sql/sqlite.rb",
      "lib/dm-migrations/sql/table.rb",
      "lib/dm-migrations/sql/table_creator.rb",
@@ -65,6 +64,7 @@ Gem::Specification.new do |s|
      "spec/unit/sql/table_spec.rb",
      "spec/unit/sql_spec.rb",
      "tasks/ci.rake",
+     "tasks/local_gemfile.rake",
      "tasks/metrics.rake",
      "tasks/spec.rake",
      "tasks/yard.rake",
