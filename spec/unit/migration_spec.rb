@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Migration' do
 
   before do
-    @adapter = mock('adapter', :class => DataMapper::Adapters::SqliteAdapter)
+    @adapter = mock('adapter', :class => DataMapper::Spec.adapter.class)
     @repo = mock('DataMapper.repository', :adapter => @adapter)
     DataMapper.stub!(:repository).and_return(@repo)
     @m = DataMapper::Migration.new(1, :do_nothing, {}) {}
@@ -40,12 +40,12 @@ describe 'Migration' do
     end
 
     it 'should determine the class of the adapter to be extended' do
-      @adapter.should_receive(:class).and_return(DataMapper::Adapters::SqliteAdapter)
+      @adapter.should_receive(:class).and_return(DataMapper::Spec.adapter.class)
       DataMapper::Migration.new(1, :do_nothing, {}) {}
     end
 
     it 'should extend the adapter with the right module' do
-      @adapter.should_receive(:extend).with(SQL::Sqlite)
+      @adapter.should_receive(:extend).with(SQL.const_get(DataMapper::Spec.adapter_name.capitalize))
       DataMapper::Migration.new(1, :do_nothing, {}) {}
     end
 

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 # a dummy class to include the module into
-class PostgresqlExtension
-  include SQL::Postgresql
+class PostgresExtension
+  include SQL::Postgres
 end
 
-describe "SQLite3 Extensions" do
+describe "Postgres Extensions" do
   before do
-    @pe = PostgresqlExtension.new
+    @pe = PostgresExtension.new
   end
 
   it 'should support schema-level transactions' do
@@ -20,7 +20,7 @@ describe "SQLite3 Extensions" do
 
   it 'should create a table object from the name' do
     table = mock('SQLite3 Table')
-    SQL::Postgresql::Table.should_receive(:new).with(@pe, 'users').and_return(table)
+    SQL::Postgres::Table.should_receive(:new).with(@pe, 'users').and_return(table)
 
     @pe.table('users').should == table
   end
@@ -35,27 +35,27 @@ describe "SQLite3 Extensions" do
       @adapter = mock('adapter', :select => [])
       @adapter.stub!(:query_table).with('users').and_return([@cs1, @cs2])
 
-      @col1 = mock('SQLite3 Column')
-      @col2 = mock('SQLite3 Column')
+      @col1 = mock('Postgres Column')
+      @col2 = mock('Postgres Column')
     end
 
     it 'should initialize columns by querying the table' do
-      SQL::Postgresql::Column.should_receive(:new).with(@cs1).and_return(@col1)
-      SQL::Postgresql::Column.should_receive(:new).with(@cs2).and_return(@col2)
+      SQL::Postgres::Column.should_receive(:new).with(@cs1).and_return(@col1)
+      SQL::Postgres::Column.should_receive(:new).with(@cs2).and_return(@col2)
       @adapter.should_receive(:query_table).with('users').and_return([@cs1,@cs2])
-      SQL::Postgresql::Table.new(@adapter, 'users')
+      SQL::Postgres::Table.new(@adapter, 'users')
     end
 
     it 'should create SQLite3 Column objects from the returned column structs' do
-      SQL::Postgresql::Column.should_receive(:new).with(@cs1).and_return(@col1)
-      SQL::Postgresql::Column.should_receive(:new).with(@cs2).and_return(@col2)
-      SQL::Postgresql::Table.new(@adapter, 'users')
+      SQL::Postgres::Column.should_receive(:new).with(@cs1).and_return(@col1)
+      SQL::Postgres::Column.should_receive(:new).with(@cs2).and_return(@col2)
+      SQL::Postgres::Table.new(@adapter, 'users')
     end
 
     it 'should set the @columns to the looked-up columns' do
-      SQL::Postgresql::Column.should_receive(:new).with(@cs1).and_return(@col1)
-      SQL::Postgresql::Column.should_receive(:new).with(@cs2).and_return(@col2)
-      t = SQL::Postgresql::Table.new(@adapter, 'users')
+      SQL::Postgres::Column.should_receive(:new).with(@cs1).and_return(@col1)
+      SQL::Postgres::Column.should_receive(:new).with(@cs2).and_return(@col2)
+      t = SQL::Postgres::Table.new(@adapter, 'users')
       t.columns.should == [@col1, @col2]
     end
 
@@ -72,7 +72,7 @@ describe "SQLite3 Extensions" do
                  :data_type       => 'integer',
                  :column_default  => 123,
                  :is_nullable     => 'NO')
-      @c = SQL::Postgresql::Column.new(@cs)
+      @c = SQL::Postgres::Column.new(@cs)
     end
 
     it 'should set the name from the column_name value' do

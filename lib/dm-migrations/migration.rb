@@ -24,7 +24,7 @@ module DataMapper
       case @adapter.class.to_s
       when /Sqlite/   then @adapter.extend(SQL::Sqlite)
       when /Mysql/    then @adapter.extend(SQL::Mysql)
-      when /Postgres/ then @adapter.extend(SQL::Postgresql)
+      when /Postgres/ then @adapter.extend(SQL::Postgres)
       else
         raise "Unsupported Migration Adapter #{@adapter.class}"
       end
@@ -115,7 +115,7 @@ module DataMapper
     end
 
     # Orders migrations by position, so we know what order to run them in.
-    # First order by postition, then by name, so at least the order is predictable.
+    # First order by position, then by name, so at least the order is predictable.
     def <=> other
       if self.position == other.position
         self.name.to_s <=> other.name.to_s

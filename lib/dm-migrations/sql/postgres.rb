@@ -1,12 +1,12 @@
 module SQL
-  module Postgresql
+  module Postgres
 
     def supports_schema_transactions?
       true
     end
 
     def table(table_name)
-      SQL::Postgresql::Table.new(self, table_name)
+      SQL::Postgres::Table.new(self, table_name)
     end
 
     def recreate_database
@@ -41,7 +41,7 @@ module SQL
         @adapter, @name = adapter, table_name
         @columns = []
         adapter.query_table(table_name).each do |col_struct|
-          @columns << SQL::Postgresql::Column.new(col_struct)
+          @columns << SQL::Postgres::Column.new(col_struct)
         end
 
         query_column_constraints
