@@ -9,8 +9,11 @@ module DataMapper
       DEFAULT_CHARACTER_SET = 'utf8'.freeze
       DEFAULT_COLLATION     = 'utf8_unicode_ci'.freeze
 
+      include DataObjectsAdapter
+
       # @api private
       def self.included(base)
+        base.extend DataObjectsAdapter::ClassMethods
         base.extend ClassMethods
       end
 

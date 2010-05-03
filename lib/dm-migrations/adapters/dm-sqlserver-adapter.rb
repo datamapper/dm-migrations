@@ -7,8 +7,11 @@ module DataMapper
 
       DEFAULT_CHARACTER_SET = 'utf8'.freeze
 
+      include DataObjectsAdapter
+
       # @api private
       def self.included(base)
+        base.extend DataObjectsAdapter::ClassMethods
         base.extend ClassMethods
       end
 

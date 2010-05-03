@@ -1,4 +1,4 @@
-require 'dm-core/adapters'
+require 'dm-core'
 
 module DataMapper
   module Migrations
@@ -177,35 +177,60 @@ module DataMapper
         end
       end
     end # module Model
+
+    def self.include_migration_api
+      DataMapper.extend(Migrations::SingletonMethods)
+      DataMapper::Model.send(:include, Migrations::Model)
+      DataMapper::Repository.send(:include, Migrations::Repository)
+      DataMapper::Model.append_extensions(Migrations::Model)
+      DataMapper::Repository.adapters.values.each do |adapter|
+        Adapters.include_migration_api(ActiveSupport::Inflector.demodulize(adapter.class.name))
+      end
+    end
+
   end
 
   module Adapters
 
     extend Chainable
 
-    extendable do
+    class << self
 
-      # @api private
-      def const_added(const_name)
+      def include_migration_api(const_name)
         require auto_migration_extensions(const_name)
+        adapter = const_get(const_name)
         if DataMapper::Migrations.const_defined?(const_name)
-          adapter = const_get(const_name)
-          adapter.send(:include, DataMapper::Migrations.const_get(const_name))
+          adapter.send(:include, migration_module(const_name))
         end
       rescue LoadError
         # do nothing
-      ensure
-        super
       end
+
+      def migration_module(const_name)
+        DataMapper::Migrations.const_get(const_name)
+      end
+
+    private
 
       # @api private
       def auto_migration_extensions(const_name)
-        name = const_name.to_s.gsub('Adapter','').downcase
-        adapter_name = (name == 'dataobjects') ? 'do' : name
-        "dm-migrations/adapters/dm-#{adapter_name}-adapter"
+        name = adapter_name(const_name)
+        name = 'do' if name == 'dataobjects'
+        "dm-migrations/adapters/dm-#{name}-adapter"
       end
 
     end
-  end
 
-end
+    extendable do
+      # @api private
+      def const_added(const_name)
+        include_migration_api(const_name)
+        super
+      end
+    end
+
+  end # module Adapters
+
+  Migrations.include_migration_api
+
+end # module DataMapper

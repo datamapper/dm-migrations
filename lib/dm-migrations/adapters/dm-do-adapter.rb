@@ -4,16 +4,6 @@ module DataMapper
   module Migrations
     
     module DataObjectsAdapter
-      # @api private
-      def self.included(base)
-        base.extend ClassMethods
-
-        DataMapper.extend(Migrations::SingletonMethods)
-
-        [ :Repository, :Model ].each do |name|
-          DataMapper.const_get(name).send(:include, Migrations.const_get(name))
-        end
-      end
 
       # Returns whether the storage_name exists.
       #

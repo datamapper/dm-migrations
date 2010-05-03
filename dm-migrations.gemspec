@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Sadauskas"]
-  s.date = %q{2010-04-30}
+  s.date = %q{2010-05-03}
   s.description = %q{DataMapper plugin for writing and speccing migrations}
   s.email = %q{psadauskas [a] gmail [d] com}
   s.extra_rdoc_files = [
@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
      "lib/dm-migrations/adapters/dm-postgres-adapter.rb",
      "lib/dm-migrations/adapters/dm-sqlite-adapter.rb",
      "lib/dm-migrations/adapters/dm-sqlserver-adapter.rb",
+     "lib/dm-migrations/adapters/dm-yaml-adapter.rb",
      "lib/dm-migrations/auto_migration.rb",
      "lib/dm-migrations/migration.rb",
      "lib/dm-migrations/migration_runner.rb",
@@ -53,6 +54,9 @@ Gem::Specification.new do |s|
      "spec/integration/migration_runner_spec.rb",
      "spec/integration/migration_spec.rb",
      "spec/integration/sql_spec.rb",
+     "spec/isolated/require_after_setup_spec.rb",
+     "spec/isolated/require_before_setup_spec.rb",
+     "spec/isolated/require_spec.rb",
      "spec/rcov.opts",
      "spec/spec.opts",
      "spec/spec_helper.rb",
@@ -82,6 +86,9 @@ Gem::Specification.new do |s|
      "spec/integration/migration_runner_spec.rb",
      "spec/integration/migration_spec.rb",
      "spec/integration/sql_spec.rb",
+     "spec/isolated/require_after_setup_spec.rb",
+     "spec/isolated/require_before_setup_spec.rb",
+     "spec/isolated/require_spec.rb",
      "spec/spec_helper.rb",
      "spec/unit/migration_spec.rb",
      "spec/unit/sql/column_spec.rb",

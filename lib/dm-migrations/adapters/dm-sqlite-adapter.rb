@@ -5,8 +5,11 @@ module DataMapper
   module Migrations
     module SqliteAdapter
 
+      include DataObjectsAdapter
+
       # @api private
       def self.included(base)
+        base.extend DataObjectsAdapter::ClassMethods
         base.extend ClassMethods
       end
 

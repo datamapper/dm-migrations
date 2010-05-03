@@ -5,8 +5,11 @@ module DataMapper
   module Migrations
     module PostgresAdapter
 
+      include DataObjectsAdapter
+
       # @api private
       def self.included(base)
+        base.extend DataObjectsAdapter::ClassMethods
         base.extend ClassMethods
       end
 
