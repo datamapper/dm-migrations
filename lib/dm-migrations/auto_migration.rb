@@ -27,14 +27,14 @@ module DataMapper
         repository_execute(:auto_upgrade!, repository_name)
       end
 
-      private
+    private
 
-      # @api private
+      # @api semipublic
       def auto_migrate_down!(repository_name)
         repository_execute(:auto_migrate_down!, repository_name)
       end
 
-      # @api private
+      # @api semipublic
       def auto_migrate_up!(repository_name)
         repository_execute(:auto_migrate_up!, repository_name)
       end
@@ -107,6 +107,7 @@ module DataMapper
     end # module Repository
 
     module Model
+
       # @api private
       def self.included(mod)
         mod.descendants.each { |model| model.extend self }
@@ -176,6 +177,7 @@ module DataMapper
           base_model.auto_migrate_up!(repository_name)
         end
       end
+
     end # module Model
 
     def self.include_migration_api
