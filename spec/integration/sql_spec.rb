@@ -18,7 +18,7 @@ describe "SQL generation" do
 
     before do
       @creator = DataMapper::Migration::TableCreator.new(@adapter, :people) do
-        column :id,          DataMapper::Types::Serial
+        column :id,          DataMapper::Property::Serial
         column :name,        'VARCHAR(50)', :allow_nil => false
         column :long_string, String, :size => 200
       end

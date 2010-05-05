@@ -56,16 +56,16 @@ module DataMapper
         def property_schema_hash(property)
           schema = super
 
-          if schema[:primitive] == 'TEXT'
+          if property.kind_of?(Property::Text)
             schema[:primitive] = text_column_statement(property.length)
             schema.delete(:default)
           end
 
-          min = property.min
-          max = property.max
+          if property.kind_of?(Property::Integer)
+            min = property.min
+            max = property.max
 
-          if property.primitive == Integer && min && max
-            schema[:primitive] = integer_column_statement(min..max)
+            schema[:primitive] = integer_column_statement(min..max) if min && max
           end
 
           schema
@@ -257,7 +257,7 @@ module DataMapper
         def filter_indexes(model, indexes)
           field_map = model.properties(name).field_map
           indexes.select do |index_name, fields|
-            fields.all? { |field| field_map[field].type != Types::Text }
+            fields.all? { |field| !field_map[field].kind_of?(Property::Text) }
           end
         end
       end # module SQL

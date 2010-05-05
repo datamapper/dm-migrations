@@ -209,7 +209,7 @@ describe DataMapper::Migrations do
 
       describe 'Text property' do
         before :all do
-          @model.property(:id, DataMapper::Types::Serial)
+          @model.property(:id, DataMapper::Property::Serial)
         end
 
         [
@@ -248,7 +248,7 @@ describe DataMapper::Migrations do
 
       describe 'String property' do
         before :all do
-          @model.property(:id, DataMapper::Types::Serial)
+          @model.property(:id, DataMapper::Property::Serial)
         end
 
         [
@@ -364,7 +364,7 @@ describe DataMapper::Migrations do
 
           describe "with a max of #{max}" do
             before :all do
-              @property = @model.property(:id, DataMapper::Types::Serial, options)
+              @property = @model.property(:id, DataMapper::Property::Serial, options)
 
               @response = capture_log(DataObjects::Postgres) { @model.auto_migrate! }
             end
@@ -391,7 +391,7 @@ describe DataMapper::Migrations do
 
       describe 'String property' do
         before :all do
-          @model.property(:id, DataMapper::Types::Serial)
+          @model.property(:id, DataMapper::Property::Serial)
         end
 
         [

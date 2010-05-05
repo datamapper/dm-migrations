@@ -68,11 +68,11 @@ module DataMapper
         def property_schema_hash(property)
           schema = super
 
-          min = property.min
-          max = property.max
+          if property.kind_of?(Property::Integer)
+            min = property.min
+            max = property.max
 
-          if property.primitive == Integer && min && max
-            schema[:primitive] = integer_column_statement(min..max)
+            schema[:primitive] = integer_column_statement(min..max) if min && max
           end
 
           if schema[:primitive] == 'TEXT'
@@ -158,16 +158,16 @@ module DataMapper
         #
         # @api private
         def type_map
-          length    = Property::DEFAULT_LENGTH
-          precision = Property::DEFAULT_PRECISION
-          scale     = Property::DEFAULT_SCALE_BIGDECIMAL
+          length    = Property::String::DEFAULT_LENGTH
+          precision = Property::Numeric::DEFAULT_PRECISION
+          scale     = Property::Decimal::DEFAULT_SCALE
 
           @type_map ||= super.merge(
-            DateTime    => { :primitive => 'DATETIME'                                         },
-            Date        => { :primitive => 'SMALLDATETIME'                                    },
-            Time        => { :primitive => 'SMALLDATETIME'                                    },
-            TrueClass   => { :primitive => 'BIT',                                             },
-            Types::Text => { :primitive => 'NVARCHAR', :length => 'max'                       }
+            DateTime       => { :primitive => 'DATETIME'                                         },
+            Date           => { :primitive => 'SMALLDATETIME'                                    },
+            Time           => { :primitive => 'SMALLDATETIME'                                    },
+            TrueClass      => { :primitive => 'BIT',                                             },
+            Property::Text => { :primitive => 'NVARCHAR', :length => 'max'                       }
           ).freeze
         end
       end

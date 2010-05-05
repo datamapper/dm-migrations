@@ -73,11 +73,11 @@ module DataMapper
             schema.delete(:scale)
           end
 
-          min = property.min
-          max = property.max
+          if property.kind_of?(Property::Integer)
+            min = property.min
+            max = property.max
 
-          if primitive == Integer && min && max
-            schema[:primitive] = integer_column_statement(min..max)
+            schema[:primitive] = integer_column_statement(min..max) if min && max
           end
 
           if schema[:serial]
@@ -143,12 +143,13 @@ module DataMapper
         #
         # @api private
         def type_map
-          precision = Property::DEFAULT_PRECISION
-          scale     = Property::DEFAULT_SCALE_BIGDECIMAL
+          precision = Property::Numeric::DEFAULT_PRECISION
+          scale     = Property::Decimal::DEFAULT_SCALE
 
           @type_map ||= super.merge(
-            BigDecimal => { :primitive => 'NUMERIC',          :precision => precision, :scale => scale },
-            Float      => { :primitive => 'DOUBLE PRECISION'                                           }
+            Property::Binary => { :primitive => 'BYTEA'                                                      },
+            BigDecimal       => { :primitive => 'NUMERIC',          :precision => precision, :scale => scale },
+            Float            => { :primitive => 'DOUBLE PRECISION'                                           }
           ).freeze
         end
       end

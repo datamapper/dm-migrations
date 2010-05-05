@@ -267,21 +267,21 @@ module DataMapper
         #
         # @api private
         def type_map
-          length    = Property::DEFAULT_LENGTH
-          precision = Property::DEFAULT_PRECISION
-          scale     = Property::DEFAULT_SCALE_BIGDECIMAL
+          length    = Property::String::DEFAULT_LENGTH
+          precision = Property::Numeric::DEFAULT_PRECISION
+          scale     = Property::Decimal::DEFAULT_SCALE
 
           @type_map ||= {
-            Integer     => { :primitive => 'NUMBER',   :precision => precision, :scale => 0   },
-            String      => { :primitive => 'VARCHAR2', :length => length                      },
-            Class       => { :primitive => 'VARCHAR2', :length => length                      },
-            BigDecimal  => { :primitive => 'NUMBER',   :precision => precision, :scale => nil },
-            Float       => { :primitive => 'BINARY_FLOAT',                                    },
-            DateTime    => { :primitive => 'DATE'                                             },
-            Date        => { :primitive => 'DATE'                                             },
-            Time        => { :primitive => 'DATE'                                             },
-            TrueClass   => { :primitive => 'NUMBER',  :precision => 1, :scale => 0            },
-            Types::Text => { :primitive => 'CLOB'                                             },
+            Integer        => { :primitive => 'NUMBER',   :precision => precision, :scale => 0   },
+            String         => { :primitive => 'VARCHAR2', :length => length                      },
+            Class          => { :primitive => 'VARCHAR2', :length => length                      },
+            BigDecimal     => { :primitive => 'NUMBER',   :precision => precision, :scale => nil },
+            Float          => { :primitive => 'BINARY_FLOAT',                                    },
+            DateTime       => { :primitive => 'DATE'                                             },
+            Date           => { :primitive => 'DATE'                                             },
+            Time           => { :primitive => 'DATE'                                             },
+            TrueClass      => { :primitive => 'NUMBER',  :precision => 1, :scale => 0            },
+            Property::Text => { :primitive => 'CLOB'                                             },
           }.freeze
         end
 
