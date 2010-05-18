@@ -54,15 +54,20 @@ describe "A Migration" do
     end
 
     adapter = DataMapper::Spec.adapter_name
-    expected_module = {
-      :sqlite   => lambda { SQL::Sqlite },
-      :mysql    => lambda { SQL::Mysql },
-      :postgres => lambda { SQL::Postgres }
-    }[adapter.to_sym][]
 
-    it "should extend with #{expected_module} when adapter is #{adapter}" do
-      migration = DataMapper::Migration.new(1, :"#{adapter}_adapter_test") { }
-      (class << migration.adapter; self; end).included_modules.should include(expected_module)
+    expected_module_lambda = {
+      :sqlite   => lambda { SQL::Sqlite   },
+      :mysql    => lambda { SQL::Mysql    },
+      :postgres => lambda { SQL::Postgres }
+    }[adapter.to_sym]
+
+    expected_module = expected_module_lambda ? expected_module_lambda.call : nil
+
+    if expected_module
+      it "should extend with #{expected_module} when adapter is #{adapter}" do
+        migration = DataMapper::Migration.new(1, :"#{adapter}_adapter_test") { }
+        (class << migration.adapter; self; end).included_modules.should include(expected_module)
+      end
     end
   end
 
