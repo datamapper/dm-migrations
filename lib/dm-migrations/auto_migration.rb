@@ -185,8 +185,8 @@ module DataMapper
       DataMapper::Model.send(:include, Migrations::Model)
       DataMapper::Repository.send(:include, Migrations::Repository)
       DataMapper::Model.append_extensions(Migrations::Model)
-      DataMapper::Repository.adapters.values.each do |adapter|
-        Adapters.include_migration_api(ActiveSupport::Inflector.demodulize(adapter.class.name))
+      DataMapper::Adapters::AbstractAdapter.descendants.each do |adapter_class|
+        Adapters.include_migration_api(ActiveSupport::Inflector.demodulize(adapter_class.name))
       end
     end
 
