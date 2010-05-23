@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Sadauskas"]
-  s.date = %q{2010-05-19}
+  s.date = %q{2010-05-23}
   s.description = %q{DataMapper plugin for writing and speccing migrations}
   s.email = %q{psadauskas [a] gmail [d] com}
   s.extra_rdoc_files = [
@@ -75,7 +75,7 @@ Gem::Specification.new do |s|
      "tasks/yard.rake",
      "tasks/yardstick.rake"
   ]
-  s.homepage = %q{http://github.com/datamapper/dm-more/tree/master/dm-migrations}
+  s.homepage = %q{http://github.com/datamapper/dm-migrations}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{datamapper}
