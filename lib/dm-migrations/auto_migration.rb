@@ -182,8 +182,9 @@ module DataMapper
 
     def self.include_migration_api
       DataMapper.extend(Migrations::SingletonMethods)
-      DataMapper::Model.send(:include, Migrations::Model)
-      DataMapper::Repository.send(:include, Migrations::Repository)
+      [ :Repository, :Model ].each do |name|
+        DataMapper.const_get(name).send(:include, Migrations.const_get(name))
+      end
       DataMapper::Model.append_extensions(Migrations::Model)
       DataMapper::Adapters::AbstractAdapter.descendants.each do |adapter_class|
         Adapters.include_migration_api(ActiveSupport::Inflector.demodulize(adapter_class.name))
@@ -194,25 +195,22 @@ module DataMapper
 
   module Adapters
 
-    extend Chainable
+    def self.include_migration_api(const_name)
+      require auto_migration_extensions(const_name)
+      if DataMapper::Migrations.const_defined?(const_name)
+        adapter = const_get(const_name)
+        adapter.send(:include, migration_module(const_name))
+      end
+    rescue LoadError
+      # Silently ignore the fact that no adapter extensions could be required
+      # This means that the adapter in use doesn't support migrations
+    end
+
+    def self.migration_module(const_name)
+      DataMapper::Migrations.const_get(const_name)
+    end
 
     class << self
-
-      def include_migration_api(const_name)
-        require auto_migration_extensions(const_name)
-        adapter = const_get(const_name)
-        if DataMapper::Migrations.const_defined?(const_name)
-          adapter.send(:include, migration_module(const_name))
-        end
-      rescue LoadError
-        # Silently ignore the fact that no adapter extensions could be required
-        # This means that the adapter in use doesn't support migrations
-      end
-
-      def migration_module(const_name)
-        DataMapper::Migrations.const_get(const_name)
-      end
-
     private
 
       # @api private
