@@ -8,7 +8,7 @@ shared_examples_for "require 'dm-migrations'" do
     DataMapper.respond_to?(:auto_migrate_down!, true).should be_true
   end
 
-  %w[Repository Model].each do |name|
+  %w[ Repository Model ].each do |name|
     it "should include the migration api in DataMapper::#{name}" do
       (DataMapper.const_get(name) < DataMapper::Migrations.const_get(name)).should be_true
     end

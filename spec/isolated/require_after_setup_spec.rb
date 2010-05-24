@@ -5,7 +5,7 @@ require 'dm-core/spec/setup'
 # To really test this behavior, this spec needs to be run in isolation and not
 # as part of the typical rake spec run, which requires dm-transactions upfront
 
-if %w[postgres mysql sqlite oracle sqlserver].include?(ENV['ADAPTER'])
+if %w[ postgres mysql sqlite oracle sqlserver ].include?(ENV['ADAPTER'])
 
   describe "require 'dm-migrations' after calling DataMapper.setup" do
 
