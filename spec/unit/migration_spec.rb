@@ -58,11 +58,11 @@ describe 'Migration' do
 
       it 'should set @verbose from the options hash' do
         m = DataMapper::Migration.new(1, :do_nothing, :verbose => false) {}
-        m.instance_variable_get(:@verbose).should be_false
+        m.instance_variable_get(:@verbose).should be(false)
       end
 
       it 'should set @verbose to true by default' do
-        @m.instance_variable_get(:@verbose).should be_true
+        @m.instance_variable_get(:@verbose).should be(true)
       end
 
       it 'should set the @up_action to an empty block' do

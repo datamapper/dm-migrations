@@ -11,11 +11,11 @@ describe "SQLite3 Extensions" do
   end
 
   it 'should support schema-level transactions' do
-    @se.supports_schema_transactions?.should be_true
+    @se.supports_schema_transactions?.should be(true)
   end
 
   it 'should support the serial column attribute' do
-    @se.supports_serial?.should be_true
+    @se.supports_serial?.should be(true)
   end
 
   it 'should create a table object from the name' do

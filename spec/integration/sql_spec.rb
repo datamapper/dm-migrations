@@ -120,12 +120,12 @@ describe "SQL generation" do
       end
 
       it "should know if the migration_info table exists" do
-        @migration.send(:migration_info_table_exists?).should be_true
+        @migration.send(:migration_info_table_exists?).should be(true)
       end
 
       it "should know if the migration_info table does not exist" do
         DataMapper::Spec.adapter.execute("DROP TABLE migration_info") rescue nil
-        @migration.send(:migration_info_table_exists?).should be_false
+        @migration.send(:migration_info_table_exists?).should be(false)
       end
 
       it "should be able to find the migration_info record for itself" do
@@ -134,15 +134,15 @@ describe "SQL generation" do
       end
 
       it "should know if a migration needs_up?" do
-        @migration.send(:needs_up?).should be_true
+        @migration.send(:needs_up?).should be(true)
         insert_migration_record
-        @migration.send(:needs_up?).should be_false
+        @migration.send(:needs_up?).should be(false)
       end
 
       it "should know if a migration needs_down?" do
-        @migration.send(:needs_down?).should be_false
+        @migration.send(:needs_down?).should be(false)
         insert_migration_record
-        @migration.send(:needs_down?).should be_true
+        @migration.send(:needs_down?).should be(true)
       end
 
       it "should properly quote the migration_info table via the adapter for use in queries" do
@@ -158,9 +158,9 @@ describe "SQL generation" do
 
       it "should create the migration_info table if it doesn't exist" do
         DataMapper::Spec.adapter.execute("DROP TABLE migration_info")
-        @migration.send(:migration_info_table_exists?).should be_false
+        @migration.send(:migration_info_table_exists?).should be(false)
         @migration.send(:create_migration_info_table_if_needed)
-        @migration.send(:migration_info_table_exists?).should be_true
+        @migration.send(:migration_info_table_exists?).should be(true)
       end
 
       it "should insert a record into the migration_info table on up" do

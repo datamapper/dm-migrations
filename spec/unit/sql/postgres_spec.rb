@@ -11,11 +11,11 @@ describe "Postgres Extensions" do
   end
 
   it 'should support schema-level transactions' do
-    @pe.supports_schema_transactions?.should be_true
+    @pe.supports_schema_transactions?.should be(true)
   end
 
   it 'should support the serial column attribute' do
-    @pe.supports_serial?.should be_true
+    @pe.supports_serial?.should be(true)
   end
 
   it 'should create a table object from the name' do
