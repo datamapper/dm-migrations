@@ -26,7 +26,7 @@ describe 'SQL module' do
       end
 
       it 'should evaluate the given block' do
-        block = lambda { column :foo, :bar }
+        block = proc { column :foo, :bar }
         col = mock('column')
         SQL::TableCreator::Column.should_receive(:new).with(@adapter, :foo, :bar, {}).and_return(col)
         tc = SQL::TableCreator.new(@adapter, 'users', {}, &block)
