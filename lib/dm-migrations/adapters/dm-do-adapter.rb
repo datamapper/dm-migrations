@@ -154,6 +154,7 @@ module DataMapper
         def create_index_statements(model)
           name       = self.name
           table_name = model.storage_name(name)
+
           indexes(model).map do |index_name, fields|
             <<-SQL.compress_lines
               CREATE INDEX #{quote_name("index_#{table_name}_#{index_name}")} ON
@@ -164,9 +165,12 @@ module DataMapper
 
         # @api private
         def create_unique_index_statements(model)
-          name       = self.name
-          table_name = model.storage_name(name)
-          unique_indexes(model).map do |index_name, fields|
+          name           = self.name
+          table_name     = model.storage_name(name)
+          key            = model.key(name).map { |property| property.field }
+          unique_indexes = unique_indexes(model).reject { |index_name, fields| fields == key }
+
+          unique_indexes.map do |index_name, fields|
             <<-SQL.compress_lines
               CREATE UNIQUE INDEX #{quote_name("unique_#{table_name}_#{index_name}")} ON
               #{quote_name(table_name)} (#{fields.map { |field| quote_name(field) }.join(', ')})
