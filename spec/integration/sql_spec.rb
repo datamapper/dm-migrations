@@ -68,7 +68,7 @@ describe "SQL generation" do
       when :mysql
         it "should create an InnoDB database for MySQL" do
           #can't get an exact == comparison here because character set and collation may differ per connection
-          @creator.to_sql.should match(/^CREATE TABLE `people` \(`id` SERIAL PRIMARY KEY, `name` VARCHAR\(50\) NOT NULL, `long_string` VARCHAR\(200\)\) ENGINE = InnoDB CHARACTER SET \w+ COLLATE \w+\z/)
+          @creator.to_sql.should match(/\ACREATE TABLE `people` \(`id` INT\(10\) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR\(50\) NOT NULL, `long_string` VARCHAR\(200\)\) ENGINE = InnoDB CHARACTER SET \w+ COLLATE \w+\z/)
         end
       when :postgres
         it "should output a CREATE TABLE statement when sent #to_sql" do

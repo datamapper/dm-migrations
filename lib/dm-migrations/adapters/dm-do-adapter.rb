@@ -180,17 +180,15 @@ module DataMapper
 
         # @api private
         def property_schema_hash(property)
-          primitive = property.primitive
-          type      = property.type
-          type_map  = self.class.type_map
+          type_map = self.class.type_map
 
-          schema = (type_map[property.class] || type_map[primitive] || type_map[type]).merge(:name => property.field)
+          schema = type_map.values_at(*property.class.ancestors).compact.first.merge(:name => property.field)
 
           schema_primitive = schema[:primitive]
 
-          if primitive == String && schema_primitive != 'TEXT' && schema_primitive != 'CLOB' && schema_primitive != 'NVARCHAR'
+          if property.kind_of?(Property::String) && !property.kind_of?(Property::Text)
             schema[:length] = property.length
-          elsif primitive == BigDecimal || primitive == Float
+          elsif property.kind_of?(Property::Decimal) || property.kind_of?(Property::Float)
             schema[:precision] = property.precision
             schema[:scale]     = property.scale
           end
@@ -200,15 +198,11 @@ module DataMapper
 
           default = property.default
 
-          if default.nil? || default.respond_to?(:call)
+          if !property.default? || default.respond_to?(:call)
             # remove the default if the property does not allow nil
             schema.delete(:default) unless schema[:allow_nil]
           else
-            schema[:default] = if type.respond_to?(:dump)
-              type.dump(default, property)
-            else
-              default
-            end
+            schema[:default] = property.dump(default)
           end
 
           schema
@@ -259,18 +253,18 @@ module DataMapper
           scale     = Property::Decimal::DEFAULT_SCALE
 
           @type_map ||= {
-            Property::Binary => { :primitive => 'BLOB'                                              },
-            Object           => { :primitive => 'TEXT'                                              },
-            Integer          => { :primitive => 'INTEGER'                                           },
-            String           => { :primitive => 'VARCHAR', :length => length                        },
-            Class            => { :primitive => 'VARCHAR', :length => length                        },
-            BigDecimal       => { :primitive => 'DECIMAL', :precision => precision, :scale => scale },
-            Float            => { :primitive => 'FLOAT',   :precision => precision                  },
-            DateTime         => { :primitive => 'TIMESTAMP'                                         },
-            Date             => { :primitive => 'DATE'                                              },
-            Time             => { :primitive => 'TIMESTAMP'                                         },
-            TrueClass        => { :primitive => 'BOOLEAN'                                           },
-            Property::Text   => { :primitive => 'TEXT'                                              },
+            Property::Binary   => { :primitive => 'BLOB'                                              }.freeze,
+            Property::Object   => { :primitive => 'TEXT'                                              }.freeze,
+            Property::Integer  => { :primitive => 'INTEGER'                                           }.freeze,
+            Property::String   => { :primitive => 'VARCHAR', :length => length                        }.freeze,
+            Property::Class    => { :primitive => 'VARCHAR', :length => length                        }.freeze,
+            Property::Decimal  => { :primitive => 'DECIMAL', :precision => precision, :scale => scale }.freeze,
+            Property::Float    => { :primitive => 'FLOAT',   :precision => precision                  }.freeze,
+            Property::DateTime => { :primitive => 'TIMESTAMP'                                         }.freeze,
+            Property::Date     => { :primitive => 'DATE'                                              }.freeze,
+            Property::Time     => { :primitive => 'TIMESTAMP'                                         }.freeze,
+            Property::Boolean  => { :primitive => 'BOOLEAN'                                           }.freeze,
+            Property::Text     => { :primitive => 'TEXT'                                              }.freeze,
           }.freeze
         end
       end

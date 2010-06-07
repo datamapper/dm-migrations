@@ -269,19 +269,18 @@ module DataMapper
         def type_map
           length    = Property::String::DEFAULT_LENGTH
           precision = Property::Numeric::DEFAULT_PRECISION
-          scale     = Property::Decimal::DEFAULT_SCALE
 
           @type_map ||= {
-            Integer        => { :primitive => 'NUMBER',   :precision => precision, :scale => 0   },
-            String         => { :primitive => 'VARCHAR2', :length => length                      },
-            Class          => { :primitive => 'VARCHAR2', :length => length                      },
-            BigDecimal     => { :primitive => 'NUMBER',   :precision => precision, :scale => nil },
-            Float          => { :primitive => 'BINARY_FLOAT',                                    },
-            DateTime       => { :primitive => 'DATE'                                             },
-            Date           => { :primitive => 'DATE'                                             },
-            Time           => { :primitive => 'DATE'                                             },
-            TrueClass      => { :primitive => 'NUMBER',  :precision => 1, :scale => 0            },
-            Property::Text => { :primitive => 'CLOB'                                             },
+            Property::Integer  => { :primitive => 'NUMBER',   :precision => precision, :scale => 0   }.freeze,
+            Property::String   => { :primitive => 'VARCHAR2', :length => length                      }.freeze,
+            Property::Class    => { :primitive => 'VARCHAR2', :length => length                      }.freeze,
+            Property::Decimal  => { :primitive => 'NUMBER',   :precision => precision, :scale => nil }.freeze,
+            Property::Float    => { :primitive => 'BINARY_FLOAT',                                    }.freeze,
+            Property::DateTime => { :primitive => 'DATE'                                             }.freeze,
+            Property::Date     => { :primitive => 'DATE'                                             }.freeze,
+            Property::Time     => { :primitive => 'DATE'                                             }.freeze,
+            Property::Boolean  => { :primitive => 'NUMBER',   :precision => 1, :scale => 0           }.freeze,
+            Property::Text     => { :primitive => 'CLOB'                                             }.freeze,
           }.freeze
         end
 

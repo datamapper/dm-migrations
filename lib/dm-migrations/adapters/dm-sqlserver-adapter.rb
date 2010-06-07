@@ -163,11 +163,11 @@ module DataMapper
           scale     = Property::Decimal::DEFAULT_SCALE
 
           @type_map ||= super.merge(
-            DateTime       => { :primitive => 'DATETIME'                                         },
-            Date           => { :primitive => 'SMALLDATETIME'                                    },
-            Time           => { :primitive => 'SMALLDATETIME'                                    },
-            TrueClass      => { :primitive => 'BIT',                                             },
-            Property::Text => { :primitive => 'NVARCHAR', :length => 'max'                       }
+            Property::DateTime => { :primitive => 'DATETIME'                   }.freeze,
+            Property::Date     => { :primitive => 'SMALLDATETIME'              }.freeze,
+            Property::Time     => { :primitive => 'SMALLDATETIME'              }.freeze,
+            Property::Boolean  => { :primitive => 'BIT',                       }.freeze,
+            Property::Text     => { :primitive => 'NVARCHAR', :length => 'max' }.freeze
           ).freeze
         end
       end

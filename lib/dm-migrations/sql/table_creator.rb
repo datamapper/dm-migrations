@@ -76,17 +76,23 @@ module SQL
 
         schema[:length] ||= schema.delete(:size) if schema.key?(:size)
 
-        if type_class.kind_of?(String)
-          schema[:primitive] = type_class
-        else
-          primitive = type_class.respond_to?(:primitive) ? type_class.primitive : type_class
-          options   = @adapter.class.type_map[primitive].dup
-
-          if type_class.respond_to?(:options) && type_class.options.kind_of?(options.class)
-            options.update(type_class.options)
+        # FIXME: this is a naive lookup method. delegate to a factory
+        # method in DM::Property to handle this
+        property_class = if type_class.kind_of?(Class)
+          if type_class < DataMapper::Property
+            type_class
+          else
+            DataMapper::Property.const_get(type_class.name)
           end
+        elsif type_class =~ /\A[A-Z]\w*\z/ && DataMapper::Property.const_defined?(type_class)
+          DataMapper::Property.const_get(type_class)
+        end
 
-          schema = options.update(schema)
+        if property_class
+          options = @adapter.class.type_map.values_at(*property_class.ancestors).compact.first
+          schema  = options.merge(schema)
+        else
+          schema[:primitive] = type_class
         end
 
         @adapter.send(:with_connection) do |connection|

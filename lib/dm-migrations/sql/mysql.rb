@@ -25,9 +25,10 @@ module SQL
       " ENGINE = InnoDB CHARACTER SET #{character_set} COLLATE #{collation}"
     end
 
+    # TODO: factor this method out and use the same nameds method from MysqlAdapter
     def property_schema_statement(connection, schema)
       if supports_serial? && schema[:serial]
-        statement = "#{schema[:quote_column_name]} SERIAL PRIMARY KEY"
+        "#{schema[:quote_column_name]} INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY"
       else
         super
       end

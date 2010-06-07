@@ -272,8 +272,9 @@ module DataMapper
         # @api private
         def type_map
           @type_map ||= super.merge(
-            DateTime => { :primitive => 'DATETIME' },
-            Time     => { :primitive => 'DATETIME' }
+            Property::DateTime => { :primitive => 'DATETIME'                        }.freeze,
+            Property::Time     => { :primitive => 'DATETIME'                        }.freeze,
+            Property::Serial   => { :primitive => 'INT', :min => 1, :serial => true }.freeze
           ).freeze
         end
       end

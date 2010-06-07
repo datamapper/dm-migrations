@@ -87,7 +87,7 @@ module DataMapper
         #
         # @api private
         def type_map
-          @type_map ||= super.merge(Class => { :primitive => 'VARCHAR' }).freeze
+          @type_map ||= super.merge(Property::Class => { :primitive => 'VARCHAR' }.freeze).freeze
         end
       end
 
