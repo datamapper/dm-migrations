@@ -1,5 +1,7 @@
 require 'dm-migrations/sql/table'
 
+require 'fileutils'
+
 module SQL
   module Sqlite
 
@@ -13,7 +15,7 @@ module SQL
 
     def recreate_database
       DataMapper.logger.info "Dropping #{@uri.path}"
-      system "rm #{@uri.path}"
+      FileUtils.rm_f(@uri.path)
       # do nothing, sqlite will automatically create the database file
     end
 
