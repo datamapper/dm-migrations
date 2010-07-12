@@ -256,6 +256,11 @@ module DataMapper
           "#{table_name[0,self.class::IDENTIFIER_MAX_LENGTH-4]}_pkt"
         end
 
+        # @api private
+        def add_column_statement
+          'ADD'
+        end
+
       end # module SQL
 
       include SQL

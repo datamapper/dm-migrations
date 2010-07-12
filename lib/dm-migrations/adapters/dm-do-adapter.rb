@@ -126,7 +126,7 @@ module DataMapper
 
         # @api private
         def alter_table_add_column_statement(connection, table_name, schema_hash)
-          "ALTER TABLE #{quote_name(table_name)} ADD COLUMN #{property_schema_statement(connection, schema_hash)}"
+          "ALTER TABLE #{quote_name(table_name)} #{add_column_statement} #{property_schema_statement(connection, schema_hash)}"
         end
 
         # @api private
@@ -242,6 +242,11 @@ module DataMapper
         # @api private
         def unique_indexes(model)
           model.properties(name).unique_indexes
+        end
+
+        # @api private
+        def add_column_statement
+          'ADD COLUMN'
         end
       end # module SQL
 
