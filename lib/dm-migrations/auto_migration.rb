@@ -187,7 +187,7 @@ module DataMapper
       end
       DataMapper::Model.append_extensions(Model)
       Adapters::AbstractAdapter.descendants.each do |adapter_class|
-        Adapters.include_migration_api(ActiveSupport::Inflector.demodulize(adapter_class.name))
+        Adapters.include_migration_api(DataMapper::Inflector.demodulize(adapter_class.name))
       end
     end
 
