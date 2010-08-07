@@ -14,7 +14,11 @@ module DataMapper
       # @since 1.0.1
       #
       def self.included(base)
-        base.extend ClassMethods
+        if base == Kernel
+          base.send :include, ClassMethods
+        else
+          base.send :extend, ClassMethods
+        end
 
         Runner.migration_namespaces << base
       end
