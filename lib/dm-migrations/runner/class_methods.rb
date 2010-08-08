@@ -107,16 +107,14 @@ module DataMapper
         # @since 1.0.1
         #
         def migration(position_or_version,name,options={},&block)
-          case position_or_version
-          when Symbol, String
-            version = Gem::Version.new(position_or_version.to_s)
-            position = self.migrations[group].length
-            name = "#{version}-#{name}"
-          when Integer
-            version = Gem::Version.new('0.0.0')
-            position = index_or_version
-          else
+          target_version, target_position = migration_target(position_or_version)
+
+          if (target_version.nil? && target_position.nil?)
             raise(ArgumentError,"Must specify either a version or migration position",caller)
+          end
+
+          unless target_version.version == '0.0.0'
+            name = "#{target_version}-#{name}"
           end
 
           if self.library
@@ -124,11 +122,16 @@ module DataMapper
             name = "#{self.library}-#{name}"
           end
 
-          if self.migrations[version].any? { |m| m.name == name }
+          if self.migrations[target_version].any? { |m| m.name == name }
             raise(RuntimeError,"Migration name conflict: #{name.dump}",caller)
           end
 
-          self.migrations[version] << Migration.new(position,name,options,&block)
+          self.migrations[target_version] << Migration.new(
+            target_position,
+            name,
+            options,
+            &block
+          )
           return true
         end
 
