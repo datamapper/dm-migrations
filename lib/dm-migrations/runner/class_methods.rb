@@ -119,9 +119,9 @@ module DataMapper
             name = "#{target_version}-#{name}"
           end
 
-          if self.library
-            # prefix the migration name with the library name
-            name = "#{self.library}-#{name}"
+          if self.migration_namespace
+            # prefix the migration name with the migration namespace
+            name = "#{self.migration_namespace}-#{name}"
           end
 
           if self.migrations[target_version].any? { |m| m.name == name }
