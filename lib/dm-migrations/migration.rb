@@ -12,29 +12,60 @@ module DataMapper
   class Migration
     include SQL
 
-    attr_accessor :position, :name, :database, :adapter
+    # The position or version the migration belongs to
+    attr_reader :position
+    
+    # The name of the migration
+    attr_reader :name
+    
+    # The repository the migration operates on
+    attr_reader :repository
+    
+    # The adapter the migration is operating on
+    attr_reader :adapter
 
-    def initialize( position, name, opts = {}, &block )
-      @position, @name = position, name
-      @options = opts
+    #
+    # Creates a new migration.
+    #
+    # @param [Symbol, String, Integer] position
+    #   The position or version the migration belongs to.
+    #
+    # @param [Symbol] name
+    #   The name of the migration.
+    #
+    # @param [Hash] options
+    #   Additional options for the migration.
+    #
+    # @option options [Boolean] :verbose (true)
+    #   Enables or disables verbose output.
+    #
+    # @option options [Symbol] :repository (:default)
+    #   The DataMapper repository the migration will operate on.
+    #
+    def initialize(position,name,options={},&block)
+      @position = position
+      @name = name
+      @options = options
 
-      @database = DataMapper.repository(@options[:database] || :default)
-      @adapter = @database.adapter
+      @repository = :default
 
-      case @adapter.class.to_s
-      when /Sqlite/   then @adapter.extend(SQL::Sqlite)
-      when /Mysql/    then @adapter.extend(SQL::Mysql)
-      when /Postgres/ then @adapter.extend(SQL::Postgres)
-      else
-        raise "Unsupported Migration Adapter #{@adapter.class}"
+      if options.has_key?(:database)
+        warn "Using the :database option with migrations is deprecated, use :repository instead"
+        @repository = options[:database]
+      elsif options.has_key?(:repository)
+        @repository = options[:repository]
       end
 
-      @verbose = @options.has_key?(:verbose) ? @options[:verbose] : true
+      @verbose = true
+      
+      if options.has_key?(:verbose)
+        @verbose = options[:verbose]
+      end
 
-      @up_action   = lambda {}
-      @down_action = lambda {}
+      @up_action = nil
+      @down_action = nil
 
-      instance_eval &block
+      instance_eval(&block)
     end
 
     # define the actions that should be performed on an up migration
@@ -51,10 +82,14 @@ module DataMapper
     def perform_up
       result = nil
       if needs_up?
+        setup! unless setup?
+
         # TODO: fix this so it only does transactions for databases that support create/drop
         # database.transaction.commit do
           say_with_time "== Performing Up Migration ##{position}: #{name}", 0 do
-            result = @up_action.call
+            if @up_action
+              result = @up_action.call
+            end
           end
           update_migration_info(:up)
         # end
@@ -66,10 +101,14 @@ module DataMapper
     def perform_down
       result = nil
       if needs_down?
+        setup! unless setup?
+
         # TODO: fix this so it only does transactions for databases that support create/drop
         # database.transaction.commit do
           say_with_time "== Performing Down Migration ##{position}: #{name}", 0 do
-            result = @down_action.call
+            if @down_action
+              result = @down_action.call
+            end
           end
           update_migration_info(:down)
         # end
@@ -210,6 +249,37 @@ module DataMapper
     def quote_column_name(column_name)
       # TODO: Fix this for 1.9 - can't use this hack to access a private method
       @adapter.send(:quote_name, column_name.to_s)
+    end
+
+    protected
+
+    #
+    # Determines whether the migration has been setup.
+    #
+    # @return [Boolean]
+    #   Specifies whether the migration has been setup.
+    #
+    # @since 1.0.1
+    #
+    def setup?
+      !(@adapter.nil?)
+    end
+
+    #
+    # Sets up the migration.
+    #
+    # @since 1.0.1
+    #
+    def setup!
+      @adapter = DataMapper.repository(@repository).adapter
+
+      case @adapter.class.name
+      when /Sqlite/   then @adapter.extend(SQL::Sqlite)
+      when /Mysql/    then @adapter.extend(SQL::Mysql)
+      when /Postgres/ then @adapter.extend(SQL::Postgres)
+      else
+        raise(RuntimeError,"Unsupported Migration Adapter #{@adapter.class}",caller)
+      end
     end
   end
 end
