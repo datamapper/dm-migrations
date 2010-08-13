@@ -7,6 +7,8 @@ module DataMapper
   module Migrations
     module Runner
       module ClassMethods
+        include DataMapper::Property::Lookup
+
         #
         # The namespace the migrations will be defined under.
         #
