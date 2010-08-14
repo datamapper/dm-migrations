@@ -3,7 +3,7 @@ require 'benchmark'
 require 'dm-migrations/sql'
 
 module DataMapper
-  class DuplicateMigrationNameError < StandardError
+  class DuplicateMigration < StandardError
     def initialize(migration)
       super("Duplicate Migration Name: '#{migration.name}', version: #{migration.position}")
     end
