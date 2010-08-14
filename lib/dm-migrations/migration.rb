@@ -1,14 +1,9 @@
-require 'benchmark'
-
+require 'dm-migrations/exceptions/duplicate_migration'
 require 'dm-migrations/sql'
 
-module DataMapper
-  class DuplicateMigration < StandardError
-    def initialize(migration)
-      super("Duplicate Migration Name: '#{migration.name}', version: #{migration.position}")
-    end
-  end
+require 'benchmark'
 
+module DataMapper
   class Migration
     include SQL
 
