@@ -35,7 +35,7 @@ module DataMapper
     # @option options [Symbol] :repository (:default)
     #   The DataMapper repository the migration will operate on.
     #
-    # @option options [Array, Symbol] :needs
+    # @option options [Array, Symbol] :needs ([])
     #   Other migrations that are dependencies of the migration.
     #
     # @api semipublic
@@ -55,7 +55,7 @@ module DataMapper
       end
 
       @verbose     = options.fetch(:verbose, true)
-      @needs       = Set[*options[:needs]]
+      @needs       = Set[*options.fetch(:needs, [])]
       @up_action   = nil
       @down_action = nil
 
