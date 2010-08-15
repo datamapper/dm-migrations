@@ -251,7 +251,7 @@ module DataMapper
     # @since 1.0.1
     #
     def setup?
-      !(@adapter.nil?)
+      !@adapter.nil?
     end
 
     #
