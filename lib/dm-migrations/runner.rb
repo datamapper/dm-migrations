@@ -48,7 +48,7 @@ module DataMapper
           migration_namespace.migrate_up!
         end
 
-        return true
+        true
       end
 
       #
@@ -64,7 +64,7 @@ module DataMapper
           migration_namespace.migrate_down!
         end
 
-        return true
+        true
       end
     end
   end

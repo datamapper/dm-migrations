@@ -134,7 +134,7 @@ module DataMapper
             migration.perform_up
           end
 
-          return true
+          true
         end
 
         #
@@ -158,7 +158,7 @@ module DataMapper
             migration.perform_down
           end
 
-          return true
+          true
         end
       end
     end

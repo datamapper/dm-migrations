@@ -118,7 +118,7 @@ module DataMapper
           options[:needs] = [position - 1]
         end
 
-        return migration_named(name, options, &block)
+        migration_named(name, options, &block)
       end
 
       #
