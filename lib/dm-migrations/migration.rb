@@ -10,13 +10,13 @@ module DataMapper
 
     # The name of the migration
     attr_reader :name
-    
+
     # The repository the migration operates on
     attr_reader :repository
 
     # The dependencies of the migration
     attr_reader :needs
-    
+
     # The adapter the migration is operating on
     attr_reader :adapter
 
@@ -55,7 +55,7 @@ module DataMapper
       end
 
       @verbose = true
-      
+
       if options.has_key?(:verbose)
         @verbose = options[:verbose]
       end
