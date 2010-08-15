@@ -32,7 +32,7 @@ module DataMapper
       # @since 1.0.1
       #
       def Runner.migration_namespaces
-        @@dm_migration_namespaces ||= Set[]
+        @dm_migration_namespaces ||= Set[]
       end
 
       #
