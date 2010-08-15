@@ -76,9 +76,10 @@ module DataMapper
     # perform the migration by running the code in the #up block
     def perform_up
       result = nil
-      if needs_up?
-        setup! unless setup?
 
+      setup! unless setup?
+
+      if needs_up?
         # TODO: fix this so it only does transactions for databases that support create/drop
         # database.transaction.commit do
         if @up_action
@@ -90,15 +91,17 @@ module DataMapper
         update_migration_info(:up)
         # end
       end
+
       result
     end
 
     # un-do the migration by running the code in the #down block
     def perform_down
       result = nil
-      if needs_down?
-        setup! unless setup?
 
+      setup! unless setup?
+
+      if needs_down?
         # TODO: fix this so it only does transactions for databases that support create/drop
         # database.transaction.commit do
         if @down_action
@@ -110,6 +113,7 @@ module DataMapper
         update_migration_info(:down)
         # end
       end
+
       result
     end
 
