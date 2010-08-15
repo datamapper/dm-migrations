@@ -40,10 +40,9 @@ module DataMapper
     #
     # @api semipublic
     #
-    def initialize(name,options={},&block)
-      @name = name
-      @options = options
-
+    def initialize(name, options = {}, &block)
+      @name       = name
+      @options    = options
       @repository = :default
 
       if options.has_key?(:database)
@@ -168,7 +167,7 @@ module DataMapper
     end
 
     # output the given text, but only if verbose mode is on
-    def write(text="")
+    def write(text = "")
       puts text if @verbose
     end
 
@@ -268,7 +267,7 @@ module DataMapper
       when /Mysql/    then @adapter.extend(SQL::Mysql)
       when /Postgres/ then @adapter.extend(SQL::Postgres)
       else
-        raise(RuntimeError,"Unsupported Migration Adapter #{@adapter.class}",caller)
+        raise(RuntimeError, "Unsupported Migration Adapter #{@adapter.class}", caller)
       end
     end
   end

@@ -95,21 +95,21 @@ module DataMapper
         #
         # @api public
         #
-        def migration(*arguments,&block)
+        def migration(*arguments, &block)
           case arguments[0]
           when Integer
-            position = arguments[0]
-            name = arguments[1]
-            options = (arguments[2] || {})
+            position =  arguments[0]
+            name     =  arguments[1]
+            options  = (arguments[2] || {})
 
-            self.migrations.migration_at(position,name,options,&block)
+            self.migrations.migration_at(position, name, options, &block)
           when Symbol, String
-            name = arguments[0]
-            options = (arguments[1] || {})
+            name     =  arguments[0]
+            options  = (arguments[1] || {})
 
-            self.migrations.migration_named(name,options,&block)
+            self.migrations.migration_named(name, options, &block)
           else
-            raise(ArgumentError,"first argument must be an Integer, Symbol or a String",caller)
+            raise(ArgumentError, "first argument must be an Integer, Symbol or a String", caller)
           end
         end
 
@@ -129,7 +129,7 @@ module DataMapper
         #
         # @api public
         #
-        def migrate_up!(position_or_name=nil)
+        def migrate_up!(position_or_name = nil)
           self.migrations.up_to(position_or_name) do |migration|
             migration.perform_up
           end
@@ -153,7 +153,7 @@ module DataMapper
         #
         # @api public
         #
-        def migrate_down!(position_or_name=nil)
+        def migrate_down!(position_or_name = nil)
           self.migrations.down_to(position_or_name) do |migration|
             migration.perform_down
           end

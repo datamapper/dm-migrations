@@ -21,7 +21,7 @@ module DataMapper
       #
       def initialize
         @migrations = {}
-        @positions = {}
+        @positions  = {}
       end
 
       #
@@ -36,7 +36,7 @@ module DataMapper
       #
       def tsort_each_child(node)
         unless @migrations.has_key?(node)
-          raise(RuntimeError,"no migration defined for #{node}",caller)
+          raise(RuntimeError, "no migration defined for #{node}", caller)
         end
 
         @migrations[node].needs.each do |dep|
@@ -72,12 +72,12 @@ module DataMapper
       #
       # @api semipublic
       #
-      def migration_named(name,options={},&block)
+      def migration_named(name, options = {}, &block)
         if @migrations.has_key?(name)
-          raise(DuplicateMigration,"there is already a migration with the name #{name}",caller)
+          raise(DuplicateMigration, "there is already a migration with the name #{name}", caller)
         end
 
-        @migrations[name] = Migration.new(name,options,&block)
+        @migrations[name] = Migration.new(name, options, &block)
       end
 
       #
@@ -105,9 +105,9 @@ module DataMapper
       #
       # @api semipublic
       #
-      def migration_at(position,name,options={},&block)
+      def migration_at(position, name, options = {}, &block)
         if @positions.has_key?(position)
-          raise(DuplicateMigration,"there is already a migration at position #{position}",caller)
+          raise(DuplicateMigration, "there is already a migration at position #{position}", caller)
         end
 
         # define a mapping from position to migration name
@@ -118,7 +118,7 @@ module DataMapper
           options[:needs] = [position - 1]
         end
 
-        return migration_named(name,options,&block)
+        return migration_named(name, options, &block)
       end
 
       #
@@ -145,8 +145,8 @@ module DataMapper
       #
       # @api semipublic
       #
-      def up_to(position_or_name=nil)
-        return enum_for(:up_to,position_or_name) unless block_given?
+      def up_to(position_or_name = nil)
+        return enum_for(:up_to, position_or_name) unless block_given?
 
         name = name_of(position_or_name)
 
@@ -183,8 +183,8 @@ module DataMapper
       #
       # @api semipublic
       #
-      def down_to(position_or_name=nil)
-        return enum_for(:down_to,position_or_name) unless block_given?
+      def down_to(position_or_name = nil)
+        return enum_for(:down_to, position_or_name) unless block_given?
 
         name = name_of(position_or_name)
 
@@ -219,7 +219,7 @@ module DataMapper
         case position_or_name
         when Integer
           unless @positions.has_key?(position_or_name)
-            raise(UnknownMigration,"unknown migration position #{position_or_name}",caller)
+            raise(UnknownMigration, "unknown migration position #{position_or_name}", caller)
           end
 
           @positions[position_or_name]
