@@ -54,22 +54,9 @@ module DataMapper
         @repository = options[:repository]
       end
 
-      @verbose = true
-
-      if options.has_key?(:verbose)
-        @verbose = options[:verbose]
-      end
-
-      @needs = Set[]
-
-      case options[:needs]
-      when Array
-        @needs += options[:needs]
-      when Symbol
-        @needs << options[:needs]
-      end
-
-      @up_action = nil
+      @verbose     = options.fetch(:verbose, true)
+      @needs       = Set[*options[:needs]]
+      @up_action   = nil
       @down_action = nil
 
       instance_eval(&block)
