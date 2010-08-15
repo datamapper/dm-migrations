@@ -95,17 +95,17 @@ module DataMapper
         #
         # @api public
         #
-        def migration(*arguments, &block)
-          case arguments[0]
+        def migration(*args, &block)
+          case args[0]
           when Integer
-            position = arguments[0]
-            name     = arguments[1]
-            options  = arguments[2] || {}
+            position = args[0]
+            name     = args[1]
+            options  = args[2] || {}
 
             self.migrations.migration_at(position, name, options, &block)
           when Symbol, String
-            name     = arguments[0]
-            options  = arguments[1] || {}
+            name     = args[0]
+            options  = args[1] || {}
 
             self.migrations.migration_named(name, options, &block)
           else
