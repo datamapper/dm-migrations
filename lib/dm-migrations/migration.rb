@@ -1,29 +1,27 @@
 require 'dm-migrations/exceptions/duplicate_migration'
 require 'dm-migrations/sql'
 
+require 'set'
 require 'benchmark'
 
 module DataMapper
   class Migration
     include SQL
 
-    # The position or version the migration belongs to
-    attr_reader :position
-    
     # The name of the migration
     attr_reader :name
     
     # The repository the migration operates on
     attr_reader :repository
+
+    # The dependencies of the migration
+    attr_reader :needs
     
     # The adapter the migration is operating on
     attr_reader :adapter
 
     #
     # Creates a new migration.
-    #
-    # @param [Symbol, String, Integer] position
-    #   The position or version the migration belongs to.
     #
     # @param [Symbol] name
     #   The name of the migration.
@@ -37,8 +35,12 @@ module DataMapper
     # @option options [Symbol] :repository (:default)
     #   The DataMapper repository the migration will operate on.
     #
-    def initialize(position,name,options={},&block)
-      @position = position
+    # @option options [Array, Symbol] :needs
+    #   Other migrations that are dependencies of the migration.
+    #
+    # @api semipublic
+    #
+    def initialize(name,options={},&block)
       @name = name
       @options = options
 
@@ -46,6 +48,7 @@ module DataMapper
 
       if options.has_key?(:database)
         warn "Using the :database option with migrations is deprecated, use :repository instead"
+
         @repository = options[:database]
       elsif options.has_key?(:repository)
         @repository = options[:repository]
@@ -55,6 +58,15 @@ module DataMapper
       
       if options.has_key?(:verbose)
         @verbose = options[:verbose]
+      end
+
+      @needs = Set[]
+
+      case options[:needs]
+      when Array
+        @needs += options[:needs]
+      when Symbol
+        @needs << options[:needs]
       end
 
       @up_action = nil
@@ -83,7 +95,7 @@ module DataMapper
         # TODO: fix this so it only does transactions for databases that support create/drop
         # database.transaction.commit do
         if @up_action
-          say_with_time "== Performing Up Migration ##{position}: #{name}", 0 do
+          say_with_time "== Performing Up Migration: #{name}", 0 do
             result = @up_action.call
           end
         end
@@ -105,7 +117,7 @@ module DataMapper
         # TODO: fix this so it only does transactions for databases that support create/drop
         # database.transaction.commit do
         if @down_action
-          say_with_time "== Performing Down Migration ##{position}: #{name}", 0 do
+          say_with_time "== Performing Down Migration: #{name}", 0 do
             result = @down_action.call
           end
         end
@@ -152,16 +164,6 @@ module DataMapper
         CREATE #{opts[:unique] ? 'UNIQUE ' : '' }INDEX #{quote_column_name(opts[:name])} ON
         #{quote_table_name(table_name)} (#{columns.map { |c| quote_column_name(c) }.join(', ') })
       SQL
-    end
-
-    # Orders migrations by position, so we know what order to run them in.
-    # First order by position, then by name, so at least the order is predictable.
-    def <=> other
-      if self.position == other.position
-        self.name.to_s <=> other.name.to_s
-      else
-        self.position <=> other.position
-      end
     end
 
     # Output some text. Optional indent level
