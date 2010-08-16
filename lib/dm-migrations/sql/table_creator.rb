@@ -1,5 +1,10 @@
+require 'dm-core'
+
 module SQL
   class TableCreator
+
+    extend DataMapper::Property::Lookup
+
     attr_accessor :table_name, :opts
 
     def initialize(adapter, table_name, opts = {}, &block)
