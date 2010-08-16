@@ -65,12 +65,12 @@ describe 'Migration' do
         @m.instance_variable_get(:@verbose).should be(true)
       end
 
-      it 'should set the @up_action to an empty block' do
-        @m.instance_variable_get(:@up_action).should be_kind_of(Proc)
+      it 'should set the @up_action to nil' do
+        @m.instance_variable_get(:@up_action).should be_nil
       end
 
-      it 'should set the @down_action to an empty block' do
-        @m.instance_variable_get(:@down_action).should be_kind_of(Proc)
+      it 'should set the @down_action to nil' do
+        @m.instance_variable_get(:@down_action).should be_nil
       end
 
       it 'should evaluate the given block'
