@@ -15,9 +15,6 @@ module DataMapper
     
     # The repository the migration operates on
     attr_reader :repository
-    
-    # The adapter the migration is operating on
-    attr_reader :adapter
 
     #
     # Creates a new migration.
@@ -63,6 +60,20 @@ module DataMapper
       instance_eval(&block)
     end
 
+    #
+    # The adapter the migration will use.
+    #
+    # @return [DataMapper::Adapter]
+    #   The adapter the migration will operate on.
+    #
+    # @since 1.0.1
+    #
+    def adapter
+      setup! unless setup?
+
+      @adapter
+    end
+
     # define the actions that should be performed on an up migration
     def up(&block)
       @up_action = block
@@ -76,8 +87,6 @@ module DataMapper
     # perform the migration by running the code in the #up block
     def perform_up
       result = nil
-
-      setup! unless setup?
 
       if needs_up?
         # TODO: fix this so it only does transactions for databases that support create/drop
@@ -99,8 +108,6 @@ module DataMapper
     def perform_down
       result = nil
 
-      setup! unless setup?
-
       if needs_down?
         # TODO: fix this so it only does transactions for databases that support create/drop
         # database.transaction.commit do
@@ -120,20 +127,20 @@ module DataMapper
     # execute raw SQL
     def execute(sql, *bind_values)
       say_with_time(sql) do
-        @adapter.execute(sql, *bind_values)
+        adapter.execute(sql, *bind_values)
       end
     end
 
     def create_table(table_name, opts = {}, &block)
-      execute TableCreator.new(@adapter, table_name, opts, &block).to_sql
+      execute TableCreator.new(adapter, table_name, opts, &block).to_sql
     end
 
     def drop_table(table_name, opts = {})
-      execute "DROP TABLE #{@adapter.send(:quote_name, table_name.to_s)}"
+      execute "DROP TABLE #{adapter.send(:quote_name, table_name.to_s)}"
     end
 
     def modify_table(table_name, opts = {}, &block)
-      TableModifier.new(@adapter, table_name, opts, &block).statements.each do |sql|
+      TableModifier.new(adapter, table_name, opts, &block).statements.each do |sql|
         execute(sql)
       end
     end
@@ -217,7 +224,7 @@ module DataMapper
     # Fetch the record for this migration out of the migration_info table
     def migration_record
       return [] unless migration_info_table_exists?
-      @adapter.select("SELECT #{migration_name_column} FROM #{migration_info_table} WHERE #{migration_name_column} = #{quoted_name}")
+      adapter.select("SELECT #{migration_name_column} FROM #{migration_info_table} WHERE #{migration_name_column} = #{quoted_name}")
     end
 
     # True if the migration needs to be run
@@ -244,12 +251,12 @@ module DataMapper
 
     def quote_table_name(table_name)
       # TODO: Fix this for 1.9 - can't use this hack to access a private method
-      @adapter.send(:quote_name, table_name.to_s)
+      adapter.send(:quote_name, table_name.to_s)
     end
 
     def quote_column_name(column_name)
       # TODO: Fix this for 1.9 - can't use this hack to access a private method
-      @adapter.send(:quote_name, column_name.to_s)
+      adapter.send(:quote_name, column_name.to_s)
     end
 
     protected
