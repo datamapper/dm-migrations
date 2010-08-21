@@ -26,14 +26,20 @@ describe "A Migration" do
         @migration.name.should == :create_people_table
       end
 
-      it "should have a :database option" do
-        adapter = DataMapper::Spec.adapter(:alternate)
-        m = DataMapper::Migration.new(2, :create_dogs_table, :database => :alternate) {}
-        m.instance_variable_get(:@adapter).should == adapter
+      it "should have a :repository option" do
+        m = DataMapper::Migration.new(2, :create_dogs_table, :repository => :alternate) {}
+
+        m.instance_variable_get(:@repository).should == :alternate
       end
 
-      it "should use the default database by default" do
-        @migration.instance_variable_get(:@database).name.should == :default
+      it "should use the default repository by default" do
+        @migration.instance_variable_get(:@repository).should == :default
+      end
+
+      it "should still support a :database option" do
+        m = DataMapper::Migration.new(2, :create_legacy_table, :database => :legacy) {}
+
+        m.instance_variable_get(:@repository).should == :legacy
       end
 
       it "should have a verbose option" do
