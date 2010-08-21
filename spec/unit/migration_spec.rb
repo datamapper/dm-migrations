@@ -41,23 +41,6 @@ describe 'Migration' do
         m.instance_variable_get(:@repository).should == :foobar
       end
 
-      it 'should determine the class of the adapter to be extended' do
-        @adapter.should_receive(:class).and_return(DataMapper::Spec.adapter.class)
-        DataMapper::Migration.new(1, :do_nothing, {}) {}
-      end
-
-      it 'should extend the adapter with the right module' do
-        @adapter.should_receive(:extend).with(SQL.const_get(DataMapper::Spec.adapter_name.capitalize))
-        DataMapper::Migration.new(1, :do_nothing, {}) {}
-      end
-
-      it 'should raise "Unsupported adapter" on an unknown adapter' do
-        @adapter.should_receive(:class).any_number_of_times.and_return("InvalidAdapter")
-        lambda {
-          DataMapper::Migration.new(1, :do_nothing, {}) {}
-        }.should raise_error
-      end
-
       it 'should set @verbose from the options hash' do
         m = DataMapper::Migration.new(1, :do_nothing, :verbose => false) {}
         m.instance_variable_get(:@verbose).should be(false)
@@ -89,6 +72,30 @@ describe 'Migration' do
       action = lambda {}
       @m.down(&action)
       @m.instance_variable_get(:@down_action).should == action
+    end
+
+    describe 'adapter' do
+      before(:each) do
+        @m.instance_variable_set(:@adapter, nil)
+      end
+
+      it 'should determine the class of the adapter to be extended' do
+        @adapter.should_receive(:class).and_return(DataMapper::Spec.adapter.class)
+
+        @m.adapter
+      end
+
+      it 'should extend the adapter with the right module' do
+        @adapter.should_receive(:extend).with(SQL.const_get(DataMapper::Spec.adapter_name.capitalize))
+
+        @m.adapter
+      end
+
+      it 'should raise "Unsupported adapter" on an unknown adapter' do
+        @adapter.should_receive(:class).any_number_of_times.and_return("InvalidAdapter")
+
+        lambda { @m.adapter }.should raise_error
+      end
     end
 
     describe 'perform_up' do
