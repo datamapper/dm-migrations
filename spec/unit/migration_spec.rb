@@ -29,14 +29,16 @@ describe 'Migration' do
         @m.instance_variable_get(:@options).should == {}
       end
 
-      it 'should set @database from the default repository if no :database option is given' do
-        DataMapper.should_receive(:repository).with(:default).and_return(@repo)
-        DataMapper::Migration.new(1, :do_nothing, {}) {}
+      it 'should set @repository from the default repository if no :repository option is given' do
+        m = DataMapper::Migration.new(1, :do_nothing, {}) {}
+
+        m.instance_variable_get(:@repository).should == :default
       end
 
-      it 'should set @database to the repository specified with the :database option' do
-        DataMapper.should_receive(:repository).with(:foobar).and_return(@repo)
-        DataMapper::Migration.new(1, :do_nothing, :database => :foobar) {}
+      it 'should set @repository to the specified :repository option' do
+        m = DataMapper::Migration.new(1, :do_nothing, :repository => :foobar) {}
+
+        m.instance_variable_get(:@repository).should == :foobar
       end
 
       it 'should determine the class of the adapter to be extended' do
