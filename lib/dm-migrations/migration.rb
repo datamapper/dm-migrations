@@ -61,6 +61,21 @@ module DataMapper
     end
 
     #
+    # The repository the migration will operate on.
+    #
+    # @return [Symbol, nil]
+    #   The name of the DataMapper repository the migration will run against.
+    #
+    # @deprecated Use {#repository} instead.
+    #
+    # @since 1.0.1.
+    #
+    def database
+      warn "Using the DataMapper::Migration#database method is deprecated, use #repository instead"
+      @repository
+    end
+
+    #
     # The adapter the migration will use.
     #
     # @return [DataMapper::Adapter]
