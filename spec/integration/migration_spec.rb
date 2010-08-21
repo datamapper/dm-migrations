@@ -16,13 +16,13 @@ describe "A Migration" do
 
       it "should have a postition attribute" do
         @migration.should respond_to(:position)
-        @migration.should respond_to(:position=)
+
         @migration.position.should == 1
       end
 
       it "should have a name attribute" do
         @migration.should respond_to(:name)
-        @migration.should respond_to(:name=)
+
         @migration.name.should == :create_people_table
       end
 
