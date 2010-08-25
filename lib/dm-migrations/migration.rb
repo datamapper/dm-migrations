@@ -9,10 +9,10 @@ module DataMapper
 
     # The position or version the migration belongs to
     attr_reader :position
-    
+
     # The name of the migration
     attr_reader :name
-    
+
     # The repository the migration operates on
     attr_reader :repository
 
@@ -49,7 +49,7 @@ module DataMapper
       end
 
       @verbose = true
-      
+
       if options.has_key?(:verbose)
         @verbose = options[:verbose]
       end
