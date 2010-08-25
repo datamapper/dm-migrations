@@ -34,28 +34,20 @@ module DataMapper
     # @option options [Symbol] :repository (:default)
     #   The DataMapper repository the migration will operate on.
     #
-    def initialize(position,name,options={},&block)
-      @position = position
-      @name = name
-      @options = options
-
-      @repository = :default
-
-      if options.has_key?(:database)
-        warn "Using the :database option with migrations is deprecated, use :repository instead"
-        @repository = options[:database]
-      elsif options.has_key?(:repository)
-        @repository = options[:repository]
-      end
-
-      @verbose = true
-
-      if options.has_key?(:verbose)
-        @verbose = options[:verbose]
-      end
-
-      @up_action = nil
+    def initialize(position, name, options = {}, &block)
+      @position    = position
+      @name        = name
+      @options     = options
+      @verbose     = options.fetch(:verbose, true)
+      @up_action   = nil
       @down_action = nil
+
+      @repository = if options.key?(:database)
+        warn 'Using the :database option with migrations is deprecated, use :repository instead'
+        options[:database]
+      else
+        options.fetch(:repository, :default)
+      end
 
       instance_eval(&block)
     end
