@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Sadauskas"]
-  s.date = %q{2010-06-08}
+  s.date = %q{2010-08-29}
   s.description = %q{DataMapper plugin for writing and speccing migrations}
   s.email = %q{psadauskas [a] gmail [d] com}
   s.extra_rdoc_files = [
@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
      "lib/dm-migrations/adapters/dm-sqlserver-adapter.rb",
      "lib/dm-migrations/adapters/dm-yaml-adapter.rb",
      "lib/dm-migrations/auto_migration.rb",
+     "lib/dm-migrations/exceptions/duplicate_migration.rb",
      "lib/dm-migrations/migration.rb",
      "lib/dm-migrations/migration_runner.rb",
      "lib/dm-migrations/sql.rb",
