@@ -15,6 +15,17 @@ describe DataMapper::Migrations do
     mod.logger = original
   end
 
+  before :all do
+    class DataMapper::Property::NumericString < DataMapper::Property::String
+      default 0
+
+      def dump(value)
+        return if value.nil?
+        value.to_s
+      end
+    end
+  end
+
   supported_by :mysql do
     before :all do
       module ::Blog
@@ -277,6 +288,19 @@ describe DataMapper::Migrations do
           end
         end
       end
+
+      describe 'NumericString property' do
+        before :all do
+          @model.property(:id,     DataMapper::Property::Serial)
+          @model.property(:number, DataMapper::Property::NumericString)
+
+          @response = capture_log(DataObjects::Mysql) { @model.auto_migrate! }
+        end
+
+        it "should create a VARCHAR(50) column with a default of '0'" do
+          @output.last.should =~ %r{\ACREATE TABLE `blog_articles` \(`id` INT\(10\) UNSIGNED NOT NULL AUTO_INCREMENT, `number` VARCHAR\(50\) DEFAULT '0', PRIMARY KEY\(`id`\)\) ENGINE = InnoDB CHARACTER SET [a-z\d]+ COLLATE (?:[a-z\d](?:_?[a-z\d]+)*)\z}
+        end
+      end
     end
   end
 
@@ -418,6 +442,19 @@ describe DataMapper::Migrations do
               @output[-2].should == "CREATE TABLE \"blog_articles\" (\"id\" SERIAL NOT NULL, \"title\" #{statement}, PRIMARY KEY(\"id\"))"
             end
           end
+        end
+      end
+
+      describe 'NumericString property' do
+        before :all do
+          @model.property(:id,     DataMapper::Property::Serial)
+          @model.property(:number, DataMapper::Property::NumericString)
+
+          @response = capture_log(DataObjects::Postgres) { @model.auto_migrate! }
+        end
+
+        it "should create a VARCHAR(50) column with a default of '0'" do
+          @output[-2].should == "CREATE TABLE \"blog_articles\" (\"id\" SERIAL NOT NULL, \"number\" VARCHAR(50) DEFAULT '0', PRIMARY KEY(\"id\"))"
         end
       end
     end

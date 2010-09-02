@@ -204,11 +204,7 @@ module DataMapper
             # remove the default if the property does not allow nil
             schema.delete(:default) unless schema[:allow_nil]
           else
-            schema[:default] = if type.respond_to?(:dump)
-              type.dump(default, property)
-            else
-              default
-            end
+            schema[:default] = property.dump(default)
           end
 
           schema
