@@ -208,6 +208,7 @@ describe DataMapper::Migrations do
 
             options.only(:min, :max).each do |key, value|
               it "should allow the #{key} value #{value} to be stored" do
+                pending "#{value} causes problem with JRuby 1.5.2 parser" if RUBY_ENGINE == 'jruby' && value == -9223372036854775808
                 lambda {
                   resource = @model.create(@property => value)
                   @model.first(@property => value).should eql(resource)
@@ -364,6 +365,7 @@ describe DataMapper::Migrations do
 
             options.only(:min, :max).each do |key, value|
               it "should allow the #{key} value #{value} to be stored" do
+                pending "#{value} causes problem with JRuby 1.5.2 parser" if RUBY_ENGINE == 'jruby' && value == -9223372036854775808
                 lambda {
                   resource = @model.create(@property => value)
                   @model.first(@property => value).should eql(resource)
@@ -524,6 +526,7 @@ describe DataMapper::Migrations do
 
             options.only(:min, :max).each do |key, value|
               it "should allow the #{key} value #{value} to be stored" do
+                pending "#{value} causes problem with JRuby 1.5.2 parser" if RUBY_ENGINE == 'jruby' && value == -9223372036854775808
                 lambda {
                   resource = @model.create(@property => value)
                   @model.first(@property => value).should eql(resource)
