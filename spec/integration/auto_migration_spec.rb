@@ -230,7 +230,7 @@ describe DataMapper::Migrations do
 
           describe "with a length of #{length}" do
             before :all do
-              @property = @model.property(:body, DataMapper::Types::Text, options)
+              @property = @model.property(:body, DataMapper::Property::Text, options)
 
               @response = capture_log(DataObjects::Mysql) { @model.auto_migrate! }
             end
