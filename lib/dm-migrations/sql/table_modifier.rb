@@ -28,7 +28,7 @@ module SQL
         @statements << "ALTER TABLE #{quoted_table_name} DROP COLUMN #{quote_column_name(name)}"
       end
     end
-    alias drop_columns drop_column
+    alias_method :drop_columns, :drop_column
 
     def rename_column(name, new_name, opts = {})
       # raise NotImplemented for SQLite3

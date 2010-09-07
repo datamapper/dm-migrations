@@ -47,7 +47,7 @@ module DataMapper
 
         # TODO: update dkubb/dm-more/dm-migrations to use schema_name and remove this
 
-        alias db_name schema_name
+        alias_method :db_name, :schema_name
 
         # @api private
         def create_table_statement(connection, model, properties)
