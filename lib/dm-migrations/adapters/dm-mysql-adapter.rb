@@ -94,8 +94,7 @@ module DataMapper
 
         # @api private
         def show_variable(name)
-          result = select('SHOW VARIABLES LIKE ?', name).first
-          result ? result.value.freeze : nil
+          select('SELECT variable_value FROM information_schema.session_variables WHERE LOWER(variable_name) = ?', name).first
         end
 
         private
