@@ -46,7 +46,7 @@ describe "SQL generation" do
 
       it "should have an array of columns" do
         @creator.instance_eval("@columns").should be_kind_of(Array)
-        @creator.instance_eval("@columns").should have(3).items
+        @creator.instance_eval("@columns").size.should == 3
         @creator.instance_eval("@columns").first.should be_kind_of(DataMapper::Migration::TableCreator::Column)
       end
 
