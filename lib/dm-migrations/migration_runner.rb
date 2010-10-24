@@ -76,7 +76,7 @@ module DataMapper
     end
 
     def migrations
-      @migrations ||= []
+      @@migrations ||= []
     end
 
   end
