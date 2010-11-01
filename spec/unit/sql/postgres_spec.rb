@@ -19,7 +19,7 @@ describe "Postgres Extensions" do
   end
 
   it 'should create a table object from the name' do
-    table = mock('SQLite3 Table')
+    table = mock('Postgres Table')
     SQL::Postgres::Table.should_receive(:new).with(@pe, 'users').and_return(table)
 
     @pe.table('users').should == table
@@ -46,7 +46,7 @@ describe "Postgres Extensions" do
       SQL::Postgres::Table.new(@adapter, 'users')
     end
 
-    it 'should create SQLite3 Column objects from the returned column structs' do
+    it 'should create Postgres Column objects from the returned column structs' do
       SQL::Postgres::Column.should_receive(:new).with(@cs1).and_return(@col1)
       SQL::Postgres::Column.should_receive(:new).with(@cs2).and_return(@col2)
       SQL::Postgres::Table.new(@adapter, 'users')
