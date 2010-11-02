@@ -32,7 +32,7 @@ describe "SQLite3 Extensions" do
     end
 
     it 'should rm the db file' do
-      @se.should_receive(:system).with('rm /foo/bar.db')
+      FileUtils.should_receive(:rm_f).with('/foo/bar.db')
       @se.recreate_database
     end
 
