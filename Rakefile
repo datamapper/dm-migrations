@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake'
 
 begin
-  gem 'jeweler', '~> 1.4'
+  gem 'jeweler', '~> 1.4.0'
   require 'jeweler'
 
   Jeweler::Tasks.new do |gem|
@@ -25,5 +25,5 @@ begin
 
   FileList['tasks/**/*.rake'].each { |task| import task }
 rescue LoadError
-  puts 'Jeweler (or a dependency) not available. Install it with: gem install jeweler'
+  puts 'Jeweler (or a dependency) not available. Install it with: gem install jeweler -v 1.4.0'
 end
