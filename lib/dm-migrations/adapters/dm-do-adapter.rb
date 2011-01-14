@@ -181,10 +181,9 @@ module DataMapper
         # @api private
         def property_schema_hash(property)
           primitive = property.primitive
-          type      = property.type
           type_map  = self.class.type_map
 
-          schema = (type_map[property.class] || type_map[primitive] || type_map[type]).merge(:name => property.field)
+          schema = (type_map[property.class] || type_map[primitive]).merge(:name => property.field)
 
           schema_primitive = schema[:primitive]
 
