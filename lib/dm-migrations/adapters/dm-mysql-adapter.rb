@@ -61,10 +61,6 @@ module DataMapper
             schema.delete(:default)
           end
 
-          if property.kind_of?(Property::Object)
-            schema.delete(:default)
-          end
-
           if property.kind_of?(Property::Integer)
             min = property.min
             max = property.max
