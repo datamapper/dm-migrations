@@ -1,3 +1,28 @@
 = dm-migrations
 
 DataMapper plugin for writing and specing migrations.
+
+== Example
+
+  require 'dm-migrations/migration_runner'
+
+  DataMapper.setup(:default, "sqlite3::memory")
+
+  DataMapper::Logger.new(STDOUT, :debug)
+  DataMapper.logger.debug( "Starting Migration" )
+
+  migration 1, :create_people_table do
+    up do
+      create_table :people do
+        column :id,   Integer, :serial => true
+      end
+    end
+
+    down do
+      drop_table :people
+    end
+  end
+
+  migrate_up!
+
+For more, see the examples directory.
