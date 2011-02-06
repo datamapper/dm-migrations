@@ -69,6 +69,14 @@ module DataMapper
             command   = connection.create_command(statement)
             command.execute_non_query
 
+            # For simple :index => true columns, add an appropriate index.
+            # Upgrading doesn't know how to deal with complex indexes yet.
+            if property.options[:index] === true 
+              statement = create_index_statement(model, property.name, [property.field]) 
+              command   = connection.create_command(statement)
+              command.execute_non_query
+            end
+
             property
           end.compact
         end
@@ -156,11 +164,18 @@ module DataMapper
           table_name = model.storage_name(name)
 
           indexes(model).map do |index_name, fields|
-            <<-SQL.compress_lines
-              CREATE INDEX #{quote_name("index_#{table_name}_#{index_name}")} ON
-              #{quote_name(table_name)} (#{fields.map { |field| quote_name(field) }.join(', ')})
-            SQL
+            create_index_statement(model, index_name, fields)
           end
+        end
+
+        # @api private
+        def create_index_statement(model, index_name, fields)
+          table_name = model.storage_name(name)
+
+          <<-SQL.compress_lines
+            CREATE INDEX #{quote_name("index_#{table_name}_#{index_name}")} ON
+            #{quote_name(table_name)} (#{fields.map { |field| quote_name(field) }.join(', ')})
+          SQL
         end
 
         # @api private
