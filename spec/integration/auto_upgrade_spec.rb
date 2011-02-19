@@ -29,7 +29,7 @@ describe DataMapper::Migrations do
     end
 
     describe '#auto_upgrade' do
-      it 'should create an index' do 
+      it 'should create an index' do
         @model.auto_migrate!
         @property = @model.property(:name, String, :index => true)
         @response = capture_log(DataObjects::Postgres) { @model.auto_upgrade! }
@@ -38,4 +38,3 @@ describe DataMapper::Migrations do
     end
   end
 end
-

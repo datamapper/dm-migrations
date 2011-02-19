@@ -71,8 +71,8 @@ module DataMapper
 
             # For simple :index => true columns, add an appropriate index.
             # Upgrading doesn't know how to deal with complex indexes yet.
-            if property.options[:index] === true 
-              statement = create_index_statement(model, property.name, [property.field]) 
+            if property.options[:index] === true
+              statement = create_index_statement(model, property.name, [property.field])
               command   = connection.create_command(statement)
               command.execute_non_query
             end
