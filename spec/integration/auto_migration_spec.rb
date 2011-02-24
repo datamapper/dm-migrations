@@ -211,7 +211,7 @@ describe DataMapper::Migrations do
                 pending_if "#{value} causes problem with JRuby 1.5.2 parser", RUBY_PLATFORM[/java/] && JRUBY_VERSION < '1.5.6' && value == -9223372036854775808 do
                   lambda {
                     resource = @model.create(@property => value)
-                    @model.first(@property => value).should eql(resource)
+                    @model.first(@property => value).should == resource
                   }.should_not raise_error
                 end
               end
