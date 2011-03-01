@@ -106,14 +106,14 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, ["~> 3.0.4"])
       s.add_runtime_dependency(%q<i18n>, ["~> 0.5.0"])
-      s.add_runtime_dependency(%q<dm-core>, ["~> 1.0.2"])
+      s.add_runtime_dependency(%q<dm-core>, ["~> 1.1.0.rc1"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
       s.add_development_dependency(%q<rake>, ["~> 0.8.7"])
       s.add_development_dependency(%q<rspec>, ["~> 1.3.1"])
     else
       s.add_dependency(%q<activesupport>, ["~> 3.0.4"])
       s.add_dependency(%q<i18n>, ["~> 0.5.0"])
-      s.add_dependency(%q<dm-core>, ["~> 1.0.2"])
+      s.add_dependency(%q<dm-core>, ["~> 1.1.0.rc1"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
       s.add_dependency(%q<rake>, ["~> 0.8.7"])
       s.add_dependency(%q<rspec>, ["~> 1.3.1"])
@@ -121,7 +121,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<activesupport>, ["~> 3.0.4"])
     s.add_dependency(%q<i18n>, ["~> 0.5.0"])
-    s.add_dependency(%q<dm-core>, ["~> 1.0.2"])
+    s.add_dependency(%q<dm-core>, ["~> 1.1.0.rc1"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
     s.add_dependency(%q<rake>, ["~> 0.8.7"])
     s.add_dependency(%q<rspec>, ["~> 1.3.1"])
