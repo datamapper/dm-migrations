@@ -15,7 +15,7 @@ module DataMapper
       #
       # @api semipublic
       def storage_exists?(storage_name)
-        statement = <<-SQL.compress_lines
+        statement = DataMapper::Ext::String.compress_lines(<<-SQL)
           SELECT COUNT(*)
           FROM "information_schema"."tables"
           WHERE "table_type" = 'BASE TABLE'
@@ -38,7 +38,7 @@ module DataMapper
       #
       # @api semipublic
       def field_exists?(storage_name, column_name)
-        statement = <<-SQL.compress_lines
+        statement = DataMapper::Ext::String.compress_lines(<<-SQL)
           SELECT COUNT(*)
           FROM "information_schema"."columns"
           WHERE "table_schema" = ?
@@ -139,7 +139,7 @@ module DataMapper
 
         # @api private
         def create_table_statement(connection, model, properties)
-          statement = <<-SQL.compress_lines
+          statement = DataMapper::Ext::String.compress_lines(<<-SQL)
             CREATE TABLE #{quote_name(model.storage_name(name))}
             (#{properties.map { |property| property_schema_statement(connection, property_schema_hash(property)) }.join(', ')},
             PRIMARY KEY(#{ properties.key.map { |property| quote_name(property.field) }.join(', ')}))
@@ -172,7 +172,7 @@ module DataMapper
         def create_index_statement(model, index_name, fields)
           table_name = model.storage_name(name)
 
-          <<-SQL.compress_lines
+          DataMapper::Ext::String.compress_lines(<<-SQL)
             CREATE INDEX #{quote_name("index_#{table_name}_#{index_name}")} ON
             #{quote_name(table_name)} (#{fields.map { |field| quote_name(field) }.join(', ')})
           SQL
@@ -186,7 +186,7 @@ module DataMapper
           unique_indexes = unique_indexes(model).reject { |index_name, fields| fields == key }
 
           unique_indexes.map do |index_name, fields|
-            <<-SQL.compress_lines
+            DataMapper::Ext::String.compress_lines(<<-SQL)
               CREATE UNIQUE INDEX #{quote_name("unique_#{table_name}_#{index_name}")} ON
               #{quote_name(table_name)} (#{fields.map { |field| quote_name(field) }.join(', ')})
             SQL
