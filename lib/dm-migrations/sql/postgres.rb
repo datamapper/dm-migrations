@@ -36,6 +36,10 @@ module SQL
       ''
     end
 
+    def change_column_type_statement(name, column)
+      "ALTER TABLE #{quote_name(name)} ALTER COLUMN #{quote_name(name)} TYPE #{column.to_sql}"
+    end
+
     class Table < SQL::Table
       def initialize(adapter, table_name)
         @adapter, @name = adapter, table_name

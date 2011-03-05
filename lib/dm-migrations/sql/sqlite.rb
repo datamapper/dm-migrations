@@ -27,6 +27,10 @@ module SQL
       true
     end
 
+    def change_column_type_statement(*args)
+      raise NotImplementedError
+    end
+
     class Table < SQL::Table
       def initialize(adapter, table_name)
         @columns = []

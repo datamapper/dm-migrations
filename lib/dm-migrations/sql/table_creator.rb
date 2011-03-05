@@ -67,7 +67,7 @@ module SQL
       private
 
       def build_type(type_class)
-        schema = { :name => @name, :quote_column_name => quoted_name }.merge(@opts)
+        schema = { :name => @name, :quote_column_name => quoted_name }
 
         [ :nullable, :nullable? ].each do |option|
           next if (value = schema.delete(option)).nil?
@@ -79,21 +79,22 @@ module SQL
           schema[:allow_nil] = !schema[:not_null]
         end
 
-        schema[:length] ||= schema.delete(:size) if schema.key?(:size)
-
         if type_class.kind_of?(String)
           schema[:primitive] = type_class
         else
           type_map  = @adapter.class.type_map
           primitive = type_class.respond_to?(:primitive) ? type_class.primitive : type_class
-          options   = (type_map[type_class] || type_map[primitive]).dup
+          options   = (type_map[type_class] || type_map[primitive])
 
-          if type_class.respond_to?(:options) && type_class.options.kind_of?(options.class)
-            options.update(type_class.options)
-          end
+          schema.update(type_class.options) if type_class.respond_to?(:options)
+          schema.update(options)
 
-          schema = options.update(schema)
+          schema.delete(:length) if type_class == DataMapper::Property::Text
         end
+
+        schema.update(@opts)
+
+        schema[:length] = schema.delete(:size) if schema.key?(:size)
 
         @adapter.send(:with_connection) do |connection|
           @adapter.property_schema_statement(connection, schema)

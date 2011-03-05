@@ -1,5 +1,7 @@
 module SQL
   class TableModifier
+    extend DataMapper::Property::Lookup
+
     attr_accessor :table_name, :opts, :statements, :adapter
 
     def initialize(adapter, table_name, opts = {}, &block)
@@ -36,8 +38,8 @@ module SQL
     end
 
     def change_column(name, type, opts = {})
-      # raise NotImplemented for SQLite3
-      @statements << "ALTER TABLE #{quoted_table_name} ALTER COLUMN #{quote_column_name(name)} TYPE #{type}"
+      column = SQL::TableCreator::Column.new(@adapter, name, type, opts)
+      @statements << @adapter.change_column_type_statement(table_name, column)
     end
 
     def quote_column_name(name)

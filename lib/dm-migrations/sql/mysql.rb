@@ -33,6 +33,10 @@ module SQL
       end
     end
 
+    def change_column_type_statement(name, column)
+      "ALTER TABLE #{quote_name(name)} MODIFY COLUMN #{column.to_sql}"
+    end
+
     class Table
       def initialize(adapter, table_name)
         @columns = []
