@@ -45,7 +45,7 @@ module DataMapper
 
         # @api private
         def create_table_statement(connection, model, properties)
-          statement = <<-SQL.compress_lines
+          statement = DataMapper::Ext::String.compress_lines(<<-SQL)
             CREATE TABLE #{quote_name(model.storage_name(name))}
             (#{properties.map { |property| property_schema_statement(connection, property_schema_hash(property)) }.join(', ')}
           SQL

@@ -162,7 +162,7 @@ module DataMapper
 
       opts[:name] ||= "#{opts[:unique] ? 'unique_' : ''}index_#{table_name}_#{columns.join('_')}"
 
-      execute <<-SQL.compress_lines
+      execute DataMapper::Ext::String.compress_lines(<<-SQL)
         CREATE #{opts[:unique] ? 'UNIQUE ' : '' }INDEX #{quote_column_name(opts[:name])} ON
         #{quote_table_name(table_name)} (#{columns.map { |c| quote_column_name(c) }.join(', ') })
       SQL

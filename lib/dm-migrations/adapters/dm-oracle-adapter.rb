@@ -15,7 +15,7 @@ module DataMapper
 
       # @api semipublic
       def storage_exists?(storage_name)
-        statement = <<-SQL.compress_lines
+        statement = DataMapper::Ext::String.compress_lines(<<-SQL)
           SELECT COUNT(*)
           FROM all_tables
           WHERE owner = ?
@@ -28,7 +28,7 @@ module DataMapper
       # @api semipublic
       def sequence_exists?(sequence_name)
         return false unless sequence_name
-        statement = <<-SQL.compress_lines
+        statement = DataMapper::Ext::String.compress_lines(<<-SQL)
           SELECT COUNT(*)
           FROM all_sequences
           WHERE sequence_owner = ?
@@ -40,7 +40,7 @@ module DataMapper
 
       # @api semipublic
       def field_exists?(storage_name, field_name)
-        statement = <<-SQL.compress_lines
+        statement = DataMapper::Ext::String.compress_lines(<<-SQL)
           SELECT COUNT(*)
           FROM all_tab_columns
           WHERE owner = ?
@@ -53,7 +53,7 @@ module DataMapper
 
       # @api semipublic
       def storage_fields(storage_name)
-        statement = <<-SQL.compress_lines
+        statement = DataMapper::Ext::String.compress_lines(<<-SQL)
           SELECT column_name
           FROM all_tab_columns
           WHERE owner = ?
@@ -176,13 +176,13 @@ module DataMapper
             sequence_name = quote_name(sequence_name)
             column_name   = quote_name(serial.field)
 
-            statements << <<-SQL.compress_lines
+            statements << DataMapper::Ext::String.compress_lines(<<-SQL)
               CREATE SEQUENCE #{sequence_name} NOCACHE
             SQL
 
             # create trigger only if custom sequence name was not specified
             unless serial.options[:sequence]
-              statements << <<-SQL.compress_lines
+              statements << DataMapper::Ext::String.compress_lines(<<-SQL)
                 CREATE OR REPLACE TRIGGER #{quote_name(default_trigger_name(table_name))}
                 BEFORE INSERT ON #{quote_name(table_name)} FOR EACH ROW
                 BEGIN
@@ -212,7 +212,7 @@ module DataMapper
         def reset_sequence_statement(model)
           if sequence_name = model_sequence_name(model)
             sequence_name = quote_name(sequence_name)
-            <<-SQL.compress_lines
+            DataMapper::Ext::String.compress_lines(<<-SQL)
             DECLARE
               cval   INTEGER;
             BEGIN
