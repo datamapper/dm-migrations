@@ -206,7 +206,8 @@ describe DataMapper::Migrations do
               @output.last.should =~ %r{\ACREATE TABLE `blog_articles` \(`id` #{Regexp.escape(statement)} NOT NULL, PRIMARY KEY\(`id`\)\) ENGINE = InnoDB CHARACTER SET [a-z\d]+ COLLATE (?:[a-z\d](?:_?[a-z\d]+)*)\z}
             end
 
-            options.only(:min, :max).each do |key, value|
+            [ :min, :max ].each do |key|
+              next unless value = options[key]
               it "should allow the #{key} value #{value} to be stored" do
                 pending_if "#{value} causes problem with JRuby 1.5.2 parser", RUBY_PLATFORM[/java/] && JRUBY_VERSION < '1.5.6' && value == -9223372036854775808 do
                   lambda {
@@ -364,7 +365,8 @@ describe DataMapper::Migrations do
               @output[-2].should == "CREATE TABLE \"blog_articles\" (\"id\" #{statement} NOT NULL, PRIMARY KEY(\"id\"))"
             end
 
-            options.only(:min, :max).each do |key, value|
+            [ :min, :max ].each do |key|
+              next unless value = options[key]
               it "should allow the #{key} value #{value} to be stored" do
                 pending_if "#{value} causes problem with JRuby 1.5.2 parser", RUBY_PLATFORM =~ /java/ && value == -9223372036854775808 do
                   lambda {
@@ -405,7 +407,8 @@ describe DataMapper::Migrations do
               @output[-2].should == "CREATE TABLE \"blog_articles\" (\"id\" #{statement} NOT NULL, PRIMARY KEY(\"id\"))"
             end
 
-            options.only(:min, :max).each do |key, value|
+            [ :min, :max ].each do |key|
+              next unless value = options[key]
               it "should allow the #{key} value #{value} to be stored" do
                 lambda {
                   resource = @model.create(@property => value)
@@ -526,7 +529,8 @@ describe DataMapper::Migrations do
               @output.last.should == "CREATE TABLE \"blog_articles\" (\"id\" #{statement} NOT NULL, PRIMARY KEY(\"id\"))"
             end
 
-            options.only(:min, :max).each do |key, value|
+            [ :min, :max ].each do |key|
+              next unless value = options[key]
               it "should allow the #{key} value #{value} to be stored" do
                 pending_if "#{value} causes problem with JRuby 1.5.2 parser", RUBY_PLATFORM =~ /java/ && value == -9223372036854775808 do
                   lambda {
