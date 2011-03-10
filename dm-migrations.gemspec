@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Sadauskas"]
-  s.date = %q{2011-03-06}
+  s.date = %q{2011-03-09}
   s.description = %q{DataMapper plugin for writing and speccing migrations}
   s.email = %q{psadauskas [a] gmail [d] com}
   s.extra_rdoc_files = [
@@ -40,6 +40,9 @@ Gem::Specification.new do |s|
     "lib/dm-migrations/exceptions/duplicate_migration.rb",
     "lib/dm-migrations/migration.rb",
     "lib/dm-migrations/migration_runner.rb",
+    "lib/dm-migrations/model.rb",
+    "lib/dm-migrations/repository.rb",
+    "lib/dm-migrations/singleton_methods.rb",
     "lib/dm-migrations/sql.rb",
     "lib/dm-migrations/sql/column.rb",
     "lib/dm-migrations/sql/mysql.rb",
@@ -76,7 +79,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/datamapper/dm-migrations}
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{datamapper}
-  s.rubygems_version = %q{1.5.2}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{DataMapper plugin for writing and speccing migrations}
   s.test_files = [
     "examples/sample_migration.rb",

@@ -1,4 +1,7 @@
 require 'dm-core'
+require 'dm-migrations/singleton_methods'
+require 'dm-migrations/repository'
+require 'dm-migrations/model'
 require 'dm-migrations/migration'
 require 'dm-migrations/auto_migration'
 
