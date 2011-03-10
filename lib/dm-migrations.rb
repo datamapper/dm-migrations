@@ -33,16 +33,14 @@ module DataMapper
       Migrations.const_get(const_name)
     end
 
-    class << self
     private
 
-      # @api private
-      def migration_extensions(const_name)
-        name = adapter_name(const_name)
-        name = 'do' if name == 'dataobjects'
-        "dm-migrations/adapters/dm-#{name}-adapter"
-      end
+    # @api private
+    def self.migration_extensions(const_name)
+      name = adapter_name(const_name)
+      name = 'do' if name == 'dataobjects'
 
+      return "dm-migrations/adapters/dm-#{name}-adapter"
     end
 
     extendable do
