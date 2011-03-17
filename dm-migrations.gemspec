@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.name = %q{dm-migrations}
   s.version = "1.1.0"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Sadauskas"]
-  s.date = %q{2011-03-10}
+  s.date = %q{2011-03-16}
   s.description = %q{DataMapper plugin for writing and speccing migrations}
   s.email = %q{psadauskas [a] gmail [d] com}
   s.extra_rdoc_files = [
