@@ -368,7 +368,7 @@ describe DataMapper::Migrations do
             [ :min, :max ].each do |key|
               next unless value = options[key]
               it "should allow the #{key} value #{value} to be stored" do
-                pending_if "#{value} causes problem with JRuby 1.5.2 parser", RUBY_PLATFORM =~ /java/ && value == -9223372036854775808 do
+                pending_if "#{value} causes problem with the JRuby < 1.6 parser", RUBY_PLATFORM =~ /java/ && JRUBY_VERSION < '1.6' && value == -9223372036854775808 do
                   lambda {
                     resource = @model.create(@property => value)
                     @model.first(@property => value).should eql(resource)
