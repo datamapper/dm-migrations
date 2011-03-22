@@ -51,7 +51,7 @@ module DataMapper
 
         # @api private
         def create_table_statement(connection, model, properties)
-          "#{super} ENGINE = #{DEFAULT_ENGINE} CHARACTER SET #{character_set} COLLATE #{collation}"
+          "#{super} ENGINE = #{storage_engine} CHARACTER SET #{character_set} COLLATE #{collation}"
         end
 
         # @api private
@@ -82,6 +82,13 @@ module DataMapper
           end
 
           statement
+        end
+
+        # @api private
+        def storage_engine
+          # Don't pull the default engine via show_variable for backwards compat where it was hard
+          # coded to InnoDB
+          @storage_engine ||= DEFAULT_ENGINE 
         end
 
         # @api private

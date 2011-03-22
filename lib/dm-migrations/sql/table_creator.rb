@@ -26,7 +26,7 @@ module SQL
     end
 
     def to_sql
-      "CREATE TABLE #{quoted_table_name} (#{@columns.map{ |c| c.to_sql }.join(', ')})#{@adapter.table_options}"
+      "CREATE TABLE #{quoted_table_name} (#{@columns.map{ |c| c.to_sql }.join(', ')})#{@adapter.table_options(@opts)}"
     end
 
     # A helper for using the native NOW() SQL function in a default
