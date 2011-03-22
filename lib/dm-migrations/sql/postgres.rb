@@ -32,7 +32,7 @@ module SQL
       statement
     end
 
-    def table_options
+    def table_options(opts)
       ''
     end
 
