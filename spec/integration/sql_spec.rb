@@ -79,12 +79,23 @@ describe "SQL generation" do
           }
           
           creator = DataMapper::Migration::TableCreator.new(@adapter, :people, opts) do
-            column :id,          DataMapper::Property::Serial
-            column :name,        'VARCHAR(50)', :allow_nil => false
-            column :long_string, String, :size => 200
+            column :id, DataMapper::Property::Serial
           end
           
-          creator.to_sql.should match(/^CREATE TABLE `people` \(`id` SERIAL PRIMARY KEY, `name` VARCHAR\(50\) NOT NULL, `long_string` VARCHAR\(200\)\) ENGINE = MyISAM CHARACTER SET big5 COLLATE big5_chinese_ci\z/)
+          creator.to_sql.should match(/^CREATE TABLE `people` \(`id` SERIAL PRIMARY KEY\) ENGINE = MyISAM CHARACTER SET big5 COLLATE big5_chinese_ci\z/)
+        end
+        
+        it "should respect default storage engine types specified by the MySQL adapter" do
+          adapter = DataMapper::Spec.adapter
+          adapter.extend(SQL::Mysql)
+          
+          adapter.storage_engine = 'MyISAM'
+          
+          creator = DataMapper::Migration::TableCreator.new(adapter, :people) do
+            column :id, DataMapper::Property::Serial
+          end
+          
+          creator.to_sql.should match(/^CREATE TABLE `people` \(`id` SERIAL PRIMARY KEY\) ENGINE = MyISAM CHARACTER SET \w+ COLLATE \w+\z/)
         end
         
       when :postgres
