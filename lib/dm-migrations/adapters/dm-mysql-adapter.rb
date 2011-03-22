@@ -33,6 +33,15 @@ module DataMapper
 
         VALUE_METHOD = RUBY_PLATFORM[/java/] ? :variable_value : :value
 
+        # Allows for specification of the default storage engine to use when creating tables via
+        # migrations.  Defaults to DEFAULT_ENGINE.
+        # 
+        # adapter = DataMapper.setup(:default, 'mysql://localhost/foo')
+        # adapter.storage_engine = 'MyISAM'
+        # 
+        # @api public
+        attr_accessor :storage_engine
+
         # @api private
         def supports_serial?
           true
