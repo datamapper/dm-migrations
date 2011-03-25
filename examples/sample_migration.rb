@@ -41,7 +41,7 @@ end
 #   property :id, Serial
 #   property :name, String, :size => 50
 #   property :age, Integer
-#   property :dob, DateTime, :default => Time.now
+#   property :dob, DateTime, :default => proc { Time.now }
 #
 # end
 #
