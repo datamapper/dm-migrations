@@ -37,7 +37,7 @@ module SQL
     end
 
     def change_column_type_statement(name, column)
-      "ALTER TABLE #{quote_name(name)} ALTER COLUMN #{quote_name(name)} TYPE #{column.to_sql}"
+      "ALTER TABLE #{quote_name(name)} ALTER COLUMN #{column.to_sql}"
     end
 
     class Table < SQL::Table
