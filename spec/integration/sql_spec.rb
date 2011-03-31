@@ -84,12 +84,21 @@ describe "SQL generation" do
     describe DataMapper::Migration, "#modify_table helper" do
       before do
         @migration = DataMapper::Migration.new(1, :create_people_table, :verbose => false) { }
+        @modifier = DataMapper::Migration::TableModifier.new(@adapter, :people) do
+          change_column :name, 'VARCHAR(200)'
+        end
       end
 
       it "should have a #modify_table helper" do
         @migration.should respond_to(:modify_table)
       end
 
+      case DataMapper::Spec.adapter_name.to_sym
+      when :postgres
+        it "should alter the column" do
+          @modifier.to_sql.should == %q{ALTER TABLE "people" ALTER COLUMN "name" VARCHAR(200)}
+        end
+			end
     end
 
     describe DataMapper::Migration, "other helpers" do
