@@ -49,5 +49,9 @@ module SQL
     def quoted_table_name
       @adapter.send(:quote_name, table_name)
     end
+
+    def to_sql
+		  @statements.join ";"
+    end
   end
 end
