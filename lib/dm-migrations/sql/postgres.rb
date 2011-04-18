@@ -21,7 +21,7 @@ module SQL
 
     def property_schema_statement(connection, schema)
       if supports_serial? && schema[:serial]
-        statement = "#{schema[:quote_column_name]} SERIAL PRIMARY KEY"
+        statement = "#{quote_name(schema[:name])} SERIAL PRIMARY KEY"
       else
         statement = super
         if schema.has_key?(:sequence_name)

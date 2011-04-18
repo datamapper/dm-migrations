@@ -34,6 +34,13 @@ module DataMapper
 
       module SQL #:nodoc:
 #        private  ## This cannot be private for current migrations
+        # @api private
+        def create_table_statement(connection, model, properties)
+          DataMapper::Ext::String.compress_lines(<<-SQL)
+            CREATE TABLE #{quote_name(model.storage_name(name))}
+            (#{properties.map { |property| property_schema_statement(connection, property_schema_hash(property)) }.join(', ')})
+          SQL
+        end
 
         # @api private
         def supports_drop_table_if_exists?
