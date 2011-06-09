@@ -31,8 +31,6 @@ module DataMapper
       module SQL #:nodoc:
 #        private  ## This cannot be private for current migrations
 
-        VALUE_METHOD = RUBY_PLATFORM[/java/] ? :variable_value : :value
-
         # @api private
         def supports_serial?
           true
@@ -97,7 +95,7 @@ module DataMapper
         # @api private
         def show_variable(name)
           result = select('SHOW VARIABLES LIKE ?', name).first
-          result ? result.send(VALUE_METHOD).freeze : nil
+          result ? result.value.freeze : nil
         end
 
         private
