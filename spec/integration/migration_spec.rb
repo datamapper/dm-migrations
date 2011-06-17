@@ -14,6 +14,14 @@ describe "A Migration" do
         @migration = DataMapper::Migration.new(1, :create_people_table, :verbose => false) { }
       end
 
+      before do
+        $stderr, @original = StringIO.new, $stderr
+      end
+
+      after do
+        $stderr = @original
+      end
+
       it "should have a postition attribute" do
         @migration.should respond_to(:position)
 
@@ -40,6 +48,11 @@ describe "A Migration" do
         m = DataMapper::Migration.new(2, :create_legacy_table, :database => :legacy) {}
 
         m.instance_variable_get(:@repository).should == :legacy
+      end
+
+      it "warns when :database is used" do
+        m = DataMapper::Migration.new(2, :create_legacy_table, :database => :legacy) {}
+        $stderr.string.chomp.should == 'Using the :database option with migrations is deprecated, use :repository instead'
       end
 
       it "should have a verbose option" do
