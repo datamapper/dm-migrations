@@ -271,7 +271,7 @@ module DataMapper
         #
         # @api private
         def type_map
-          @type_map ||= super.merge(
+          super.merge(
             DateTime => { :primitive => 'DATETIME' },
             Time     => { :primitive => 'DATETIME' }
           ).freeze

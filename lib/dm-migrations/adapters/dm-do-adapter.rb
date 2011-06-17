@@ -269,11 +269,11 @@ module DataMapper
         #
         # @api private
         def type_map
-          length    = Property::String::DEFAULT_LENGTH
-          precision = Property::Numeric::DEFAULT_PRECISION
-          scale     = Property::Decimal::DEFAULT_SCALE
+          length    = Property::String.length
+          precision = Property::Numeric.precision
+          scale     = Property::Decimal.scale
 
-          @type_map ||= {
+          {
             Property::Binary => { :primitive => 'BLOB'                                              },
             Object           => { :primitive => 'TEXT'                                              },
             Integer          => { :primitive => 'INTEGER'                                           },

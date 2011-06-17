@@ -79,6 +79,25 @@ describe "SQL generation" do
           @creator.to_sql.should == %q{CREATE TABLE "people" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "name" VARCHAR(50) NOT NULL, "long_string" VARCHAR(200))}
         end
       end
+
+      context 'when the default string length is modified' do
+        before do
+          @original = DataMapper::Property::String.length
+          DataMapper::Property::String.length(255)
+
+          @creator = DataMapper::Migration::TableCreator.new(@adapter, :people) do
+            column :string, String
+          end
+        end
+
+        after do
+          DataMapper::Property::String.length(@original)
+        end
+
+        it 'uses the new length for the character column' do
+          @creator.to_sql.should match(/CHAR\(255\)/)
+        end
+      end
     end
 
     describe DataMapper::Migration, "#modify_table helper" do
