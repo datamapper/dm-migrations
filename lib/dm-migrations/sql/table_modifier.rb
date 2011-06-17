@@ -51,7 +51,7 @@ module SQL
     end
 
     def to_sql
-		  @statements.join ";"
+      @statements.join(';')
     end
   end
 end
