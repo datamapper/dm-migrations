@@ -65,15 +65,16 @@ module DataMapper
             next if field_exists?(table_name, schema_hash[:name])
 
             statement = alter_table_add_column_statement(connection, table_name, schema_hash)
-            command   = connection.create_command(statement)
-            command.execute_non_query
+            connection.create_command(statement).execute_non_query
 
-            # For simple :index => true columns, add an appropriate index.
-            # Upgrading doesn't know how to deal with complex indexes yet.
-            if property.options[:index] === true
+            # For now, only support unnamed/ungrouped indices.  Give precedence
+            # to :unique_index over :index, since it's possible to specify both.
+            if property.unique_index === true
+              statement = create_unique_index_statement(model, property.name, [property.field])
+              connection.create_command(statement).execute_non_query
+            elsif property.index === true
               statement = create_index_statement(model, property.name, [property.field])
-              command   = connection.create_command(statement)
-              command.execute_non_query
+              connection.create_command(statement).execute_non_query
             end
 
             property
@@ -94,8 +95,7 @@ module DataMapper
           statements.concat(create_unique_index_statements(model))
 
           statements.each do |statement|
-            command   = connection.create_command(statement)
-            command.execute_non_query
+            connection.create_command(statement).execute_non_query
           end
         end
 
@@ -157,6 +157,16 @@ module DataMapper
         end
 
         # @api private
+        def create_index_statement(model, index_name, fields)
+          table_name = model.storage_name(name)
+
+          DataMapper::Ext::String.compress_lines(<<-SQL)
+            CREATE INDEX #{quote_name("index_#{table_name}_#{index_name}")} ON
+            #{quote_name(table_name)} (#{fields.map { |field| quote_name(field) }.join(', ')})
+          SQL
+        end
+
+        # @api private
         def create_index_statements(model)
           table_name = model.storage_name(name)
 
@@ -166,11 +176,11 @@ module DataMapper
         end
 
         # @api private
-        def create_index_statement(model, index_name, fields)
+        def create_unique_index_statement(model, index_name, fields)
           table_name = model.storage_name(name)
 
           DataMapper::Ext::String.compress_lines(<<-SQL)
-            CREATE INDEX #{quote_name("index_#{table_name}_#{index_name}")} ON
+            CREATE UNIQUE INDEX #{quote_name("unique_#{table_name}_#{index_name}")} ON
             #{quote_name(table_name)} (#{fields.map { |field| quote_name(field) }.join(', ')})
           SQL
         end
@@ -182,10 +192,7 @@ module DataMapper
           unique_indexes = unique_indexes(model).reject { |index_name, fields| fields == key }
 
           unique_indexes.map do |index_name, fields|
-            DataMapper::Ext::String.compress_lines(<<-SQL)
-              CREATE UNIQUE INDEX #{quote_name("unique_#{table_name}_#{index_name}")} ON
-              #{quote_name(table_name)} (#{fields.map { |field| quote_name(field) }.join(', ')})
-            SQL
+            create_unique_index_statement(model, index_name, fields)
           end
         end
 
