@@ -51,7 +51,6 @@ module DataMapper
 
       # @api semipublic
       def upgrade_model_storage(model)
-        name       = self.name
         properties = model.properties_with_subclasses(name)
 
         if success = create_model_storage(model)
@@ -84,7 +83,6 @@ module DataMapper
 
       # @api semipublic
       def create_model_storage(model)
-        name       = self.name
         properties = model.properties_with_subclasses(name)
 
         return false if storage_exists?(model.storage_name(name))
@@ -160,7 +158,6 @@ module DataMapper
 
         # @api private
         def create_index_statements(model)
-          name       = self.name
           table_name = model.storage_name(name)
 
           indexes(model).map do |index_name, fields|
@@ -180,7 +177,6 @@ module DataMapper
 
         # @api private
         def create_unique_index_statements(model)
-          name           = self.name
           table_name     = model.storage_name(name)
           key            = model.key(name).map { |property| property.field }
           unique_indexes = unique_indexes(model).reject { |index_name, fields| fields == key }
