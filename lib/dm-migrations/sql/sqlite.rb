@@ -19,7 +19,7 @@ module SQL
       # do nothing, sqlite will automatically create the database file
     end
 
-    def table_options
+    def table_options(opts)
       ''
     end
 

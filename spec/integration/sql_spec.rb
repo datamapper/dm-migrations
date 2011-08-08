@@ -70,6 +70,34 @@ describe "SQL generation" do
           #can't get an exact == comparison here because character set and collation may differ per connection
           @creator.to_sql.should match(/^CREATE TABLE `people` \(`id` SERIAL PRIMARY KEY, `name` VARCHAR\(50\) NOT NULL, `long_string` VARCHAR\(200\)\) ENGINE = InnoDB CHARACTER SET \w+ COLLATE \w+\z/)
         end
+        
+        it "should allow for custom table creation options for MySQL" do
+          opts = {
+            :storage_engine => 'MyISAM',
+            :character_set  => 'big5',
+            :collation      => 'big5_chinese_ci',
+          }
+          
+          creator = DataMapper::Migration::TableCreator.new(@adapter, :people, opts) do
+            column :id, DataMapper::Property::Serial
+          end
+          
+          creator.to_sql.should match(/^CREATE TABLE `people` \(`id` SERIAL PRIMARY KEY\) ENGINE = MyISAM CHARACTER SET big5 COLLATE big5_chinese_ci\z/)
+        end
+        
+        it "should respect default storage engine types specified by the MySQL adapter" do
+          adapter = DataMapper::Spec.adapter
+          adapter.extend(SQL::Mysql)
+          
+          adapter.storage_engine = 'MyISAM'
+          
+          creator = DataMapper::Migration::TableCreator.new(adapter, :people) do
+            column :id, DataMapper::Property::Serial
+          end
+          
+          creator.to_sql.should match(/^CREATE TABLE `people` \(`id` SERIAL PRIMARY KEY\) ENGINE = MyISAM CHARACTER SET \w+ COLLATE \w+\z/)
+        end
+        
       when :postgres
         it "should output a CREATE TABLE statement when sent #to_sql" do
           @creator.to_sql.should == %q{CREATE TABLE "people" ("id" SERIAL PRIMARY KEY, "name" VARCHAR(50) NOT NULL, "long_string" VARCHAR(200))}

@@ -31,6 +31,15 @@ module DataMapper
       module SQL #:nodoc:
 #        private  ## This cannot be private for current migrations
 
+        # Allows for specification of the default storage engine to use when creating tables via
+        # migrations.  Defaults to DEFAULT_ENGINE.
+        # 
+        # adapter = DataMapper.setup(:default, 'mysql://localhost/foo')
+        # adapter.storage_engine = 'MyISAM'
+        # 
+        # @api public
+        attr_accessor :storage_engine
+
         # @api private
         def supports_serial?
           true
@@ -49,7 +58,7 @@ module DataMapper
 
         # @api private
         def create_table_statement(connection, model, properties)
-          "#{super} ENGINE = #{DEFAULT_ENGINE} CHARACTER SET #{character_set} COLLATE #{collation}"
+          "#{super} ENGINE = #{storage_engine} CHARACTER SET #{character_set} COLLATE #{collation}"
         end
 
         # @api private
@@ -80,6 +89,13 @@ module DataMapper
           end
 
           statement
+        end
+
+        # @api private
+        def storage_engine
+          # Don't pull the default engine via show_variable for backwards compat where it was hard
+          # coded to InnoDB
+          @storage_engine ||= DEFAULT_ENGINE 
         end
 
         # @api private

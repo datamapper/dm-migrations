@@ -21,8 +21,12 @@ module SQL
       true
     end
 
-    def table_options
-      " ENGINE = InnoDB CHARACTER SET #{character_set} COLLATE #{collation}"
+    def table_options(opts)
+      opt_engine    = opts[:storage_engine] || storage_engine
+      opt_char_set  = opts[:character_set] || character_set
+      opt_collation = opts[:collation] || collation
+      
+      " ENGINE = #{opt_engine} CHARACTER SET #{opt_char_set} COLLATE #{opt_collation}"
     end
 
     def property_schema_statement(connection, schema)
