@@ -25,7 +25,7 @@ module SQL
       opt_engine    = opts[:storage_engine] || storage_engine
       opt_char_set  = opts[:character_set] || character_set
       opt_collation = opts[:collation] || collation
-      
+
       " ENGINE = #{opt_engine} CHARACTER SET #{opt_char_set} COLLATE #{opt_collation}"
     end
 

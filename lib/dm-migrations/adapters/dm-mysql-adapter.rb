@@ -33,10 +33,10 @@ module DataMapper
 
         # Allows for specification of the default storage engine to use when creating tables via
         # migrations.  Defaults to DEFAULT_ENGINE.
-        # 
+        #
         # adapter = DataMapper.setup(:default, 'mysql://localhost/foo')
         # adapter.storage_engine = 'MyISAM'
-        # 
+        #
         # @api public
         attr_accessor :storage_engine
 
@@ -95,7 +95,7 @@ module DataMapper
         def storage_engine
           # Don't pull the default engine via show_variable for backwards compat where it was hard
           # coded to InnoDB
-          @storage_engine ||= DEFAULT_ENGINE 
+          @storage_engine ||= DEFAULT_ENGINE
         end
 
         # @api private
