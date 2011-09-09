@@ -198,7 +198,7 @@ module DataMapper
           primitive = property.primitive
           type_map  = self.class.type_map
 
-          schema = (type_map[property.class] || type_map[primitive]).merge(:name => property.field)
+          schema = (type_map[property.class] || type_map[property.class.superclass] || type_map[primitive]).merge(:name => property.field)
 
           schema_primitive = schema[:primitive]
 
