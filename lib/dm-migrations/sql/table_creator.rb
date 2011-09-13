@@ -83,7 +83,7 @@ module SQL
           schema[:primitive] = type_class
         else
           type_map  = @adapter.class.type_map
-          primitive = type_class.respond_to?(:primitive) ? type_class.primitive : type_class
+          primitive = type_class.respond_to?(:dump_as) ? type_class.dump_as : type_class
           options   = (type_map[type_class] || type_map[primitive])
 
           schema.update(type_class.options) if type_class.respond_to?(:options)
