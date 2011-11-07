@@ -18,7 +18,6 @@ gem 'dm-core', DM_VERSION,
 
 group :development do
 
-  gem 'jeweler', '~> 1.6.4'
   gem 'rake',    '~> 0.9.2'
   gem 'rspec',   '~> 1.3.2'
 
