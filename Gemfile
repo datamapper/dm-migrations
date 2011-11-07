@@ -1,6 +1,8 @@
 require 'pathname'
 
-source 'http://rubygems.org'
+source :rubygems
+
+gemspec
 
 SOURCE         = ENV.fetch('SOURCE', :git).to_sym
 REPO_POSTFIX   = SOURCE == :path ? ''                                : '.git'
@@ -60,7 +62,7 @@ group :datamapper do
   end
 
   plugins = ENV['PLUGINS'] || ENV['PLUGIN']
-  plugins = plugins.to_s.tr(',', ' ').split.push('dm-migrations').uniq
+  plugins = plugins.to_s.tr(',', ' ').split
 
   plugins.each do |plugin|
     gem plugin, DM_VERSION,
