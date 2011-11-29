@@ -42,7 +42,8 @@ module SQL
     end
 
     def rename_column_type_statement(table_name, old_col, new_col)
-      "ALTER TABLE #{quote_name(table_name)} CHANGE #{quote_name(old_col)} #{quote_name(new_col)}"
+      table_info = select("SHOW COLUMNS FROM #{quote_name(table_name)} LIKE ?", old_col).first
+      "ALTER TABLE #{quote_name(table_name)} CHANGE #{quote_name(old_col)} #{quote_name(new_col)} #{table_info.type}"
     end
 
     class Table
