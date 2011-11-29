@@ -34,7 +34,7 @@ module SQL
 
     def rename_column(name, new_name, opts = {})
       # raise NotImplemented for SQLite3
-      @statements << "ALTER TABLE #{quoted_table_name} RENAME COLUMN #{quote_column_name(name)} TO #{quote_column_name(new_name)}"
+      @statements << @adapter.rename_column_type_statement(table_name, name, new_name)
     end
 
     def change_column(name, type, opts = {})

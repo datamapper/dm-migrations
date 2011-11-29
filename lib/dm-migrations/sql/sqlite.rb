@@ -31,6 +31,11 @@ module SQL
       raise NotImplementedError
     end
 
+    def rename_column_type_statement(old_col, new_col)
+      raise NotImplementedError
+    end
+
+
     class Table < SQL::Table
       def initialize(adapter, table_name)
         @columns = []
