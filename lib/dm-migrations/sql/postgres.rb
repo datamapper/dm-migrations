@@ -40,6 +40,10 @@ module SQL
       "ALTER TABLE #{quote_name(name)} ALTER COLUMN #{column.to_sql}"
     end
 
+    def rename_column_type_statement(table_name, old_col, new_col)
+      "ALTER TABLE #{quote_name(table_name)} RENAME COLUMN #{quote_name(old_col)} TO #{quote_name(new_col)}"
+    end
+
     class Table < SQL::Table
       def initialize(adapter, table_name)
         @adapter, @name = adapter, table_name
