@@ -31,7 +31,7 @@ module SQL
       raise NotImplementedError
     end
 
-    def rename_column_type_statement(old_col, new_col)
+    def rename_column_type_statement(table_name, old_col, new_col)
       raise NotImplementedError
     end
 
