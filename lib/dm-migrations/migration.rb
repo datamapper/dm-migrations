@@ -292,6 +292,7 @@ module DataMapper
       when /Sqlite/   then @adapter.extend(SQL::Sqlite)
       when /Mysql/    then @adapter.extend(SQL::Mysql)
       when /Postgres/ then @adapter.extend(SQL::Postgres)
+      when /Sqlserver/ then @adapter.extend(SQL::Sqlserver)
       else
         raise(RuntimeError,"Unsupported Migration Adapter #{@adapter.class}",caller)
       end

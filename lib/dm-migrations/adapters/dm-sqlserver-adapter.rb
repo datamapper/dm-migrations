@@ -40,9 +40,8 @@ module DataMapper
         end
 
         # @api private
-        def schema_name
-          # TODO: is there a cleaner way to find out the current DB we are connected to?
-          @options[:path].split('/').last
+        def schema_name          
+          select('SELECT DB_NAME()')
         end
 
         # TODO: update dkubb/dm-more/dm-migrations to use schema_name and remove this
@@ -167,7 +166,8 @@ module DataMapper
             Date           => { :primitive => 'SMALLDATETIME'              },
             Time           => { :primitive => 'SMALLDATETIME'              },
             TrueClass      => { :primitive => 'BIT',                       },
-            Property::Text => { :primitive => 'NVARCHAR', :length => 'max' }
+            Property::Text => { :primitive => 'NVARCHAR', :length => 'max' },
+            Property::Binary => { :primitive => 'VARBINARY', :length => 'max' } 
           ).freeze
         end
       end
