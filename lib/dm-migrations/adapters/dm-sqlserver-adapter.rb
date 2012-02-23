@@ -55,9 +55,9 @@ module DataMapper
             (#{properties.map { |property| property_schema_statement(connection, property_schema_hash(property)) }.join(', ')}
           SQL
 
-          unless properties.any? { |property| property.serial? }
+            # specific the primary keys.
+            # don't have to filter out Serial (aka IDENTITY) type
             statement << ", PRIMARY KEY(#{properties.key.map { |property| quote_name(property.field) }.join(', ')})"
-          end
 
           statement << ')'
           statement
