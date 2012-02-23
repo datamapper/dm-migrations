@@ -166,6 +166,25 @@ module DataMapper
         end
 
         # @api private
+        def property_schema_hash(property)
+          schema = super
+
+          if (property.kind_of?(Property::Binary))
+            # BLOB does not support length
+            schema.delete(:length)
+          end
+
+          if (property.primitive == String && property.length > 4000)
+            # Oracle doesn't support string over 4000 bytes
+            schema[:primitive] = 'NCLOB'
+            # CLOB and NCLOB do not support length
+            schema.delete(:length)
+          end
+
+          schema
+        end
+
+        # @api private
         def create_sequence_statements(model)
           name       = self.name
           table_name = model.storage_name(name)
@@ -282,7 +301,7 @@ module DataMapper
           precision = Property::Numeric.precision
           scale     = Property::Decimal.scale
 
-          {
+          super.merge(
             Integer        => { :primitive => 'NUMBER',   :precision => precision, :scale => 0   },
             String         => { :primitive => 'VARCHAR2', :length => length                      },
             Class          => { :primitive => 'VARCHAR2', :length => length                      },
@@ -292,8 +311,8 @@ module DataMapper
             Date           => { :primitive => 'DATE'                                             },
             Time           => { :primitive => 'DATE'                                             },
             TrueClass      => { :primitive => 'NUMBER',  :precision => 1, :scale => 0            },
-            Property::Text => { :primitive => 'CLOB'                                             },
-          }.freeze
+            Property::Text => { :primitive => 'CLOB'                                             }
+          ).freeze
         end
 
         # Use table truncate or delete for auto_migrate! to speed up test execution
