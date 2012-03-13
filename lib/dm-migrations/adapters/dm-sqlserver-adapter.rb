@@ -74,6 +74,16 @@ module DataMapper
             schema[:primitive] = integer_column_statement(min..max) if min && max
           end
 
+          schema_primitive = schema[:primitive]
+          
+          if schema_primitive == 'NVARCHAR'
+            if property.length <= 4000
+              schema[:length] = property.length
+            else
+              schema[:length] = 'max'
+            end
+          end
+
           if schema[:primitive] == 'TEXT'
             schema.delete(:default)
           end
