@@ -190,6 +190,22 @@ describe 'Migration' do
         end
       end
 
+      describe '#execute' do
+        before do
+          @adapter.stub!(:select)
+        end
+
+        it 'should send the SQL it its executing to the adapter execute method' do
+          @adapter.should_receive(:select).with('SELECT SOME SQL')
+          @m.select('SELECT SOME SQL')
+        end
+
+        it 'should output the SQL it is executing' do
+          @m.should_receive(:write).with(/SELECT SOME SQL/)
+          @m.select('SELECT SOME SQL')
+        end
+      end
+
       describe 'helpers' do
         before do
           @m.stub!(:execute) # don't actually run anything

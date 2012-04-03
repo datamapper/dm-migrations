@@ -123,6 +123,10 @@ describe "A Migration" do
         @migration.should respond_to(:execute)
       end
 
+      it "should make available an #select method" do
+        @migration.should respond_to(:select)
+      end
+
       it "should run the sql passed into the #execute method"
       # TODO: Find out how to stub the DataMapper::database.execute method
     end
