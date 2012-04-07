@@ -24,7 +24,7 @@ namespace :db do
     end
 
     desc "Perform non destructive auto-migration"
-    task :upgrade => :environment do
+    task :upgrade => :environment do |t, _|
       puts "=> Auto-upgrading"
       ::DataMapper.auto_upgrade!
       puts "<= #{t.name} done"
