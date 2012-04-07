@@ -137,16 +137,22 @@ describe "SQL generation" do
         @migration.should respond_to(:modify_table)
       end
 
-      case DataMapper::Spec.adapter_name.to_sym
-      when :postgres
+      describe '#change_column' do
         before do
           @modifier = DataMapper::Migration::TableModifier.new(@adapter, :people) do
             change_column :name, 'VARCHAR(200)'
           end
         end
 
-        it "should alter the column" do
-          @modifier.to_sql.should == %q{ALTER TABLE "people" ALTER COLUMN "name" VARCHAR(200)}
+        case DataMapper::Spec.adapter_name.to_sym
+        when :mysql
+          it 'alters the column' do
+            @modifier.to_sql.should == %q{ALTER TABLE `people` MODIFY COLUMN `name` VARCHAR(200)}
+          end
+        when :postgres
+          it 'alters the column' do
+            @modifier.to_sql.should == %q{ALTER TABLE "people" ALTER COLUMN "name" VARCHAR(200)}
+          end
         end
       end
 
