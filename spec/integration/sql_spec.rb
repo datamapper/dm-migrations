@@ -150,6 +150,31 @@ describe "SQL generation" do
           @modifier.to_sql.should == %q{ALTER TABLE "people" ALTER COLUMN "name" VARCHAR(200)}
         end
       end
+
+      describe "#rename_column" do
+        before do
+          @adapter.execute("CREATE TABLE `people` (name VARCHAR(50) NOT NULL)")
+
+          @modifier = DataMapper::Migration::TableModifier.new(@adapter, :people) do
+            rename_column :name, :first_name
+          end
+        end
+
+        after do
+          @adapter.execute("DROP TABLE `people`")
+        end
+
+        case DataMapper::Spec.adapter_name.to_sym
+        when :postgres
+          it "should rename the column" do
+            @modifier.to_sql.should == %q{ALTER TABLE "people" RENAME COLUMN "name" TO "first_name"}
+          end
+        when :mysql
+          it "should change the column" do
+            @modifier.to_sql.should == %q{ALTER TABLE `people` CHANGE `name` `first_name` varchar(50) NOT NULL}
+          end
+        end
+      end
     end
 
     describe DataMapper::Migration, "other helpers" do
