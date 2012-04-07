@@ -45,7 +45,7 @@ module SQL
       column_info    = select("SHOW COLUMNS FROM #{quote_name(table_name)} LIKE ?", old_col).first
       column_options = {
         :name      => column_info.field,
-        :primitive => column_info.type
+        :primitive => column_info.type,
       }
 
       if column_info.null == 'YES'
@@ -61,10 +61,10 @@ module SQL
       end
 
       column = with_connection do |connection|
-                 property_schema_statement(connection,column_options)
-               end
+        property_schema_statement(connection, column_options)
+      end
 
-      column_name, column_definition = column.split(' ',2)
+      column_name, column_definition = column.split(' ', 2)
 
       "ALTER TABLE #{quote_name(table_name)} CHANGE #{quote_name(old_col)} #{quote_name(new_col)} #{column_definition}"
     end

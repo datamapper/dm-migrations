@@ -27,14 +27,13 @@ module SQL
       true
     end
 
-    def change_column_type_statement(*args)
+    def change_column_type_statement(*)
       raise NotImplementedError
     end
 
-    def rename_column_type_statement(table_name, old_col, new_col)
+    def rename_column_type_statement(*)
       raise NotImplementedError
     end
-
 
     class Table < SQL::Table
       def initialize(adapter, table_name)

@@ -131,7 +131,6 @@ describe "SQL generation" do
     describe DataMapper::Migration, "#modify_table helper" do
       before do
         @migration = DataMapper::Migration.new(1, :create_people_table, :verbose => false) { }
-
       end
 
       it "should have a #modify_table helper" do
