@@ -42,31 +42,24 @@ module SQL
     end
 
     def rename_column_type_statement(table_name, old_col, new_col)
-      column_info    = select("SHOW COLUMNS FROM #{quote_name(table_name)} LIKE ?", old_col).first
+      table       = quote_name(table_name)
+      column_info = select("SHOW COLUMNS FROM #{table} LIKE ?", old_col).first
+
       column_options = {
         :name      => column_info.field,
         :primitive => column_info.type,
+        :serial    => column_info.extra == 'auto_increment',
+        :allow_nil => column_info.null == 'YES',
+        :default   => column_info.default,
       }
-
-      if column_info.null == 'YES'
-        column_options[:allow_nil] = true
-        column_options[:default]   = column_info.default
-      else
-        column_options[:allow_nil] = false
-      end
-
-      case column_info.extra
-      when 'auto_increment'
-        column_options[:serial] = true
-      end
 
       column = with_connection do |connection|
         property_schema_statement(connection, column_options)
       end
 
-      column_name, column_definition = column.split(' ', 2)
+      column_definition = column.split(' ', 2).last
 
-      "ALTER TABLE #{quote_name(table_name)} CHANGE #{quote_name(old_col)} #{quote_name(new_col)} #{column_definition}"
+      "ALTER TABLE #{table} CHANGE #{quote_name(old_col)} #{quote_name(new_col)} #{column_definition}"
     end
 
     class Table
