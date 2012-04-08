@@ -1,4 +1,6 @@
+require 'backports'
 require 'spec'
+
 require 'isolated/require_spec'
 require 'dm-core/spec/setup'
 
