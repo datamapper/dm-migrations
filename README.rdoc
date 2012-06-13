@@ -4,6 +4,7 @@ DataMapper plugin for writing and specing migrations.
 
 == Example
 
+  require 'dm-migrations'
   require 'dm-migrations/migration_runner'
 
   DataMapper.setup(:default, "sqlite3::memory")
