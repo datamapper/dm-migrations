@@ -106,7 +106,7 @@ module DataMapper
 
           if    min >= -smallint && max < smallint then 'SMALLINT'
           elsif min >= -integer  && max < integer  then 'INTEGER'
-          elsif min >= -bigint   && max < bigint   then 'BIGINT'
+          elsif min >= -bigint   && max <= bigint   then 'BIGINT'
           else
             raise ArgumentError, "min #{min} and max #{max} exceeds supported range"
           end
@@ -125,7 +125,7 @@ module DataMapper
           max = range.last
 
           if    max.nil? || max < 2**31 then 'SERIAL'
-          elsif             max < 2**63 then 'BIGSERIAL'
+          elsif             max <= 2**63 then 'BIGSERIAL'
           else
             raise ArgumentError, "min #{range.first} and max #{max} exceeds supported range"
           end
