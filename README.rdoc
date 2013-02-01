@@ -1,7 +1,8 @@
 = dm-migrations
 
 DataMapper plugin for writing and specing migrations.
-*New! Foreign Keys support!!*
+
+New! Foreign Keys support!!
 
 == Example
 
