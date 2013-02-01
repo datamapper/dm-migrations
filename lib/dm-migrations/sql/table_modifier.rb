@@ -19,6 +19,20 @@ module SQL
       @statements << "ALTER TABLE #{quoted_table_name} ADD COLUMN #{column.to_sql}"
     end
 
+    def add_foreign_key(column, reference, reference_id = 'id')
+      @statements << "ALTER TABLE #{quoted_table_name} " +
+                                  "ADD CONSTRAINT #{quote_column_name(@table_name+'_'+reference.to_s.gsub('_id', '')+'_fk')} " +
+                                  "FOREIGN KEY (#{quote_column_name(column)}) " +
+                                  "REFERENCES #{quote_column_name(reference)} (#{quote_column_name(reference_id)}) " +
+                                  "ON DELETE NO ACTION ON UPDATE NO ACTION"
+    end
+
+    def drop_foreign_key(constraint_name)
+      fk_name = quote_column_name(@table_name+'_'+constraint_name.to_s.gsub('_id', '')+'_fk')
+      @statements << "ALTER TABLE #{quoted_table_name} DROP FOREIGN KEY #{fk_name}"
+      @statements << "ALTER TABLE #{quoted_table_name} DROP INDEX #{fk_name}"
+    end
+
     def drop_column(name)
       # raise NotImplemented for SQLite3. Can't ALTER TABLE, need to copy table.
       # We'd have to inspect it, and we can't, since we aren't executing any queries yet.

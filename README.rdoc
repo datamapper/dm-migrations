@@ -1,6 +1,7 @@
 = dm-migrations
 
 DataMapper plugin for writing and specing migrations.
+*New! Foreign Keys support!!*
 
 == Example
 
@@ -13,14 +14,24 @@ DataMapper plugin for writing and specing migrations.
 
   migration 1, :create_people_table do
     up do
+      create_table :jobs do
+        column :id,   Integer, :serial => true
+        column :name, String
+      end
       create_table :people do
         column :id,   Integer, :serial => true
         column :desc, String
+        column :job_id
+      end
+
+      modify_table :people do
+        add_foreign_key :job_id, :jobs
       end
     end
 
     down do
       drop_table :people
+      drop_table :jobs
     end
   end
 
