@@ -202,7 +202,7 @@ module DataMapper
 
           schema_primitive = schema[:primitive]
 
-          if primitive == String && schema_primitive != 'TEXT' && schema_primitive != 'CLOB' && schema_primitive != 'NVARCHAR'
+          if primitive == String && schema_primitive != 'TEXT' && schema_primitive != 'CLOB' && schema_primitive != 'NVARCHAR' && schema_primitive != 'BYTEA'
             schema[:length] = property.length
           elsif primitive == BigDecimal || primitive == Float
             schema[:precision] = property.precision
