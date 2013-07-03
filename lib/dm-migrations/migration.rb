@@ -288,6 +288,8 @@ module DataMapper
     def setup!
       @adapter = DataMapper.repository(@repository).adapter
 
+      @adapter = @adapter.master if @adapter.respond_to? :master
+
       case @adapter.class.name
       when /Sqlite/   then @adapter.extend(SQL::Sqlite)
       when /Mysql/    then @adapter.extend(SQL::Mysql)
