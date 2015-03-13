@@ -39,6 +39,10 @@ New! Foreign Keys support!!
   migration 2, :make_desc_text do
     up do
       modify_table :people do
+        # You currently have to use the underlying DB type here, rather than
+        # a DataMapper type
+        change_column :desc, 'text'
+        
         drop_foreign_key :job_id, :jobs
       end
     end
