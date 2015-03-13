@@ -157,6 +157,14 @@ module DataMapper
         adapter.select(sql, *bind_values)
       end
     end
+    
+    def disable_foreign_key_checks
+      execute "SET foreign_key_checks = 0"
+    end
+    
+    def enable_foreign_key_checks
+      execute "SET foreign_key_checks = 1"
+    end
 
     def create_table(table_name, opts = {}, &block)
       execute TableCreator.new(adapter, table_name, opts, &block).to_sql
