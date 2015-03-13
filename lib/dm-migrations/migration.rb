@@ -247,6 +247,14 @@ module DataMapper
     def migration_info_table_exists?
       adapter.storage_exists?('migration_info')
     end
+    
+    def table_exists? name
+      adapter.storage_exists?(name)
+    end
+    
+    def table_column_exists? table, column
+      adapter.field_exists?(table, column)
+    end
 
     # Fetch the record for this migration out of the migration_info table
     def migration_record
