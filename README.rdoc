@@ -5,6 +5,8 @@ DataMapper plugin for writing and specing migrations.
 - Foreign Keys support
 - table_exists? table
 - table_column_exists? table, column
+- enable_foreign_key_checks
+- disable_foreign_key_checks
 
 
 
@@ -40,8 +42,10 @@ DataMapper plugin for writing and specing migrations.
     end
 
     down do
+      disable_foreign_key_checks
       drop_table :people
       drop_table :jobs
+      enable_foreign_key_checks
     end
   end
 
