@@ -249,11 +249,11 @@ module DataMapper
     end
     
     def table_exists? name
-      adapter.storage_exists?(name)
+      adapter.storage_exists?(name.to_s)
     end
     
     def table_column_exists? table, column
-      adapter.field_exists?(table, column)
+      adapter.field_exists?(table.to_s, column.to_s)
     end
 
     # Fetch the record for this migration out of the migration_info table
