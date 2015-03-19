@@ -2,7 +2,8 @@
 
 DataMapper plugin for writing and specing migrations.
 
-- Foreign Keys support
+- Foreign Keys support:
+- foreign_key_exists? table_name, foreign_key
 - table_exists? table
 - table_column_exists? table, column
 - enable_foreign_key_checks
