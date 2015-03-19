@@ -20,7 +20,12 @@ module SQL
     end
 
     def foreign_key_exists?(constraint_name)
-      execute "SELECT TRUE FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = 'FOREIGN KEY' AND TABLE_SCHEMA = #{quoted_table_name} AND CONSTRAINT_NAME = '#{quote_column_name(@table_name+'_'+constraint_name.to_s.gsub('_id', '')+'_fk')}'"    
+      # TODO: Move to ADAPTERS
+      str = "SELECT TRUE FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = 'FOREIGN KEY' AND TABLE_SCHEMA = '#{adapter.schema_name}' AND TABLE_NAME = '#{table_name}' AND CONSTRAINT_NAME = '#{@table_name+'_'+constraint_name.to_s.gsub('_id', '')+'_fk'}'"    
+      # puts str
+      result = @adapter.select(str)
+      # puts "Result: #{result.inspect}"
+      result.blank? ? false : (result.first == 1)
     end
 
     def add_foreign_key(column, reference, reference_id = 'id')
@@ -34,7 +39,7 @@ module SQL
     def drop_foreign_key(constraint_name)
       fk_name = quote_column_name(@table_name+'_'+constraint_name.to_s.gsub('_id', '')+'_fk')
       @statements << "ALTER TABLE #{quoted_table_name} DROP FOREIGN KEY #{fk_name}"
-      @statements << "ALTER TABLE #{quoted_table_name} DROP INDEX #{fk_name}"
+      # @statements << "ALTER TABLE #{quoted_table_name} DROP INDEX #{fk_name}"
     end
 
     def drop_column(name)
