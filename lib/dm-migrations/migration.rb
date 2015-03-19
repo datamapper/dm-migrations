@@ -165,7 +165,11 @@ module DataMapper
     def enable_foreign_key_checks
       execute "SET foreign_key_checks = 1"
     end
-
+    
+    def foreign_key_exists? table_name, foreign_key
+      execute "SELECT TRUE FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = 'FOREIGN KEY' AND TABLE_SCHEMA = '#{table_name}' AND CONSTRAINT_NAME = '#{foreign_key}'"    
+    end
+    
     def create_table(table_name, opts = {}, &block)
       execute TableCreator.new(adapter, table_name, opts, &block).to_sql
     end
