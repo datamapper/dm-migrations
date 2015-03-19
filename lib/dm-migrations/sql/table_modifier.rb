@@ -19,8 +19,8 @@ module SQL
       @statements << "ALTER TABLE #{quoted_table_name} ADD COLUMN #{column.to_sql}"
     end
 
-    def foreign_key_exists?(column, reference, reference_id = 'id')
-      execute "SELECT TRUE FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = 'FOREIGN KEY' AND TABLE_SCHEMA = #{quoted_table_name} AND CONSTRAINT_NAME = '#{quote_column_name(@table_name+'_'+reference.to_s.gsub('_id', '')+'_fk')}'"    
+    def foreign_key_exists?(constraint_name)
+      execute "SELECT TRUE FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = 'FOREIGN KEY' AND TABLE_SCHEMA = #{quoted_table_name} AND CONSTRAINT_NAME = '#{quote_column_name(@table_name+'_'+constraint_name.to_s.gsub('_id', '')+'_fk')}'"    
     end
 
     def add_foreign_key(column, reference, reference_id = 'id')
