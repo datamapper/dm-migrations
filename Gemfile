@@ -1,8 +1,10 @@
 require 'pathname'
 
-source :rubygems
+source 'https://rubygems.org'
 
 gemspec
+
+gem 'backports'
 
 SOURCE         = ENV.fetch('SOURCE', :git).to_sym
 REPO_POSTFIX   = SOURCE == :path ? ''                                : '.git'
@@ -16,20 +18,12 @@ gem 'dm-core', DM_VERSION,
   SOURCE  => "#{DATAMAPPER}/dm-core#{REPO_POSTFIX}",
   :branch => CURRENT_BRANCH
 
-group :development do
-
-  gem 'rake',    '~> 0.9.2'
-  gem 'rspec',   '~> 1.3.2'
-
-end
-
 platforms :mri_18 do
   group :quality do
 
     gem 'rcov',      '~> 0.9.10'
     gem 'yard',      '~> 0.7.2'
     gem 'yardstick', '~> 0.4'
-
   end
 end
 
