@@ -1,5 +1,3 @@
-require 'backports'
-
 require 'dm-migrations'
 require 'dm-migrations/migration_runner'
 
