@@ -65,16 +65,18 @@ module DataMapper
         def property_schema_hash(property)
           schema = super
 
-          if property.kind_of?(Property::Text)
-            schema[:primitive] = text_column_statement(property.length)
-            schema.delete(:default)
-          end
-
-          if property.kind_of?(Property::Integer)
+          case property.dump_as
+          when Integer.singleton_class
             min = property.min
             max = property.max
 
             schema[:primitive] = integer_column_statement(min..max) if min && max
+          when String.singleton_class
+            unless schema[:length]
+              length = property.length || 2**16-1
+              schema[:primitive] = text_column_statement(length)
+              schema.delete(:default)
+            end
           end
 
           schema
