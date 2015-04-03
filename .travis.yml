@@ -11,7 +11,7 @@ rvm:
 
 env:
   global:
-    - JRUBY_OPTS="$JRUBY_OPTS --2.0 -J-Xmx1g --debug"
+    - JRUBY_OPTS="$JRUBY_OPTS -J-Xmx1g --debug"
   matrix:
     - "ADAPTER=in_memory"
     - "ADAPTER=yaml"
@@ -44,6 +44,7 @@ script: "bundle exec rake spec"
 matrix:
   allow_failures:
     - rvm: ruby-head
+    - rvm: jruby-19mode
     - rvm: jruby-head
 
 notifications:
