@@ -28,7 +28,7 @@ services:
   - postgresql
 
 before_install:
-  - until sudo apt-get update -qq; do :; done  # retry until successful
+  - travis_retry sudo apt-get update -qq
   - sudo apt-get install -qq postgresql-server-dev-all
 
 bundler_args: --without yard guard metrics benchmarks --retry 3
