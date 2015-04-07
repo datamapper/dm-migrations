@@ -320,8 +320,8 @@ describe DataMapper::Migrations do
           @response = capture_log(DataObjects::Mysql) { @model.auto_migrate! }
         end
 
-        it "should create a TEXT column" do
-          @output.last.should =~ %r{\ACREATE TABLE `blog_articles` \(`id` INT\(10\) UNSIGNED NOT NULL AUTO_INCREMENT, `number` TEXT, PRIMARY KEY\(`id`\)\) ENGINE = InnoDB CHARACTER SET [a-z\d]+ COLLATE (?:[a-z\d](?:_?[a-z\d]+)*)\z}
+        it "should create a large VARCHAR column" do
+          @output.last.should =~ %r{\ACREATE TABLE `blog_articles` \(`id` INT\(10\) UNSIGNED NOT NULL AUTO_INCREMENT, `number` VARCHAR\(16383\), PRIMARY KEY\(`id`\)\) ENGINE = InnoDB CHARACTER SET [a-z\d]+ COLLATE (?:[a-z\d](?:_?[a-z\d]+)*)\z}
         end
       end
     end

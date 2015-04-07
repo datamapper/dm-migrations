@@ -8,6 +8,7 @@ module DataMapper
       DEFAULT_ENGINE        = 'InnoDB'.freeze
       DEFAULT_CHARACTER_SET = 'utf8'.freeze
       DEFAULT_COLLATION     = 'utf8_unicode_ci'.freeze
+      MAXIMUM_CHAR_LENGTH   = (2**16 - 1) / 4  # allow room for utf8mb4
 
       include DataObjectsAdapter
 
@@ -72,10 +73,11 @@ module DataMapper
 
             schema[:primitive] = integer_column_statement(min..max) if min && max
           when String.singleton_class
-            unless schema[:length]
-              length = property.length || 2**16-1
-              schema[:primitive] = text_column_statement(length)
+            if property.kind_of?(Property::Text)
+              schema[:primitive] = text_column_statement(property.length)
               schema.delete(:default)
+            else
+              schema[:length] ||= MAXIMUM_CHAR_LENGTH
             end
           end
 
