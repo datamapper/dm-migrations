@@ -68,10 +68,11 @@ module DataMapper
 
           case property.dump_as
           when Integer.singleton_class
-            min = property.min
-            max = property.max
-
-            schema[:primitive] = integer_column_statement(min..max) if min && max
+            if property.respond_to?(:min) && property.respond_to?(:max)
+              min = property.min
+              max = property.max
+              schema[:primitive] = integer_column_statement(min..max) if min && max
+            end
           when String.singleton_class
             if property.kind_of?(Property::Text)
               schema[:primitive] = text_column_statement(property.length)

@@ -219,6 +219,24 @@ describe DataMapper::Migrations do
             end
           end
         end
+
+        describe 'with a property that dumps as integer but has no min or max' do
+          before :all do
+            klass = Class.new(DataMapper::Property::Object) do
+              load_as ::Integer
+              dump_as ::Integer
+            end
+
+            @model.property(:id,     DataMapper::Property::Serial)
+            @model.property(:number, klass)
+
+            @response = capture_log(DataObjects::Mysql) { @model.auto_migrate! }
+          end
+
+          it "should create an INTEGER column" do
+            @output.last.should =~ %r{\ACREATE TABLE `blog_articles` \(`id` INT\(10\) UNSIGNED NOT NULL AUTO_INCREMENT, `number` INTEGER, PRIMARY KEY\(`id`\)\) ENGINE = InnoDB CHARACTER SET [a-z\d]+ COLLATE (?:[a-z\d](?:_?[a-z\d]+)*)\z}
+          end
+        end
       end
 
       describe 'Text property' do
