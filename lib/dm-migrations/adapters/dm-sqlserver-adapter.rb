@@ -22,8 +22,8 @@ module DataMapper
 
       # @api semipublic
       def field_exists?(storage_name, field_name)
-        result = select("SELECT c.name FROM sysobjects as o JOIN syscolumns AS c ON o.id = c.id WHERE o.name = #{quote_name(storage_name)} AND c.name LIKE ?", field_name).first
-        result ? result.field == field_name : false
+        result = select("SELECT c.name FROM sysobjects as o JOIN syscolumns AS c ON o.id = c.id WHERE o.name = ? AND c.name LIKE ?", storage_name, field_name).first
+        result ? result.to_s == field_name.to_s : false
       end
 
       module SQL #:nodoc:

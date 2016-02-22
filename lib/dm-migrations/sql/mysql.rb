@@ -41,6 +41,27 @@ module SQL
       "ALTER TABLE #{quote_name(name)} MODIFY COLUMN #{column.to_sql}"
     end
 
+    def rename_column_type_statement(table_name, old_col, new_col)
+      table       = quote_name(table_name)
+      column_info = select("SHOW COLUMNS FROM #{table} LIKE ?", old_col).first
+
+      column_options = {
+        :name      => column_info.field,
+        :primitive => column_info.type,
+        :serial    => column_info.extra == 'auto_increment',
+        :allow_nil => column_info.null == 'YES',
+        :default   => column_info.default,
+      }
+
+      column = with_connection do |connection|
+        property_schema_statement(connection, column_options)
+      end
+
+      column_definition = column.split(' ', 2).last
+
+      "ALTER TABLE #{table} CHANGE #{quote_name(old_col)} #{quote_name(new_col)} #{column_definition}"
+    end
+
     class Table
       def initialize(adapter, table_name)
         @columns = []

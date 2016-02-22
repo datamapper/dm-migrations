@@ -1,0 +1,51 @@
+language: ruby
+
+rvm:
+  - 2.0
+  - 2.1
+  - 2.2
+  - ruby-head
+  - jruby-19mode
+  - jruby-head
+  - rbx-19mode
+
+env:
+  global:
+    - JRUBY_OPTS="$JRUBY_OPTS -J-Xmx1g --debug"
+  matrix:
+    - "ADAPTER=in_memory"
+    - "ADAPTER=yaml"
+    - "ADAPTER=sqlite"
+    - "ADAPTER=mysql DM_DB_USER=root DM_DB_PASSWORD=''"
+    - "ADAPTER=postgres DM_DB_USER=postgres DM_DB_PASSWORD=''"
+
+cache: bundler
+
+sudo: true
+
+services:
+  - mysql
+  - postgresql
+
+before_install:
+  - travis_retry sudo apt-get update -qq
+  - sudo apt-get install -qq postgresql-server-dev-all
+
+bundler_args: --without yard guard metrics benchmarks --retry 3
+
+before_script:
+  - mysql -e "create database datamapper_alternate_tests;"
+  - mysql -e "create database datamapper_default_tests;"
+  - psql  -c "create database datamapper_default_tests;" -U postgres
+  - psql  -c "create database datamapper_alternate_tests;" -U postgres
+
+script: "bundle exec rake spec"
+
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+    - rvm: jruby-19mode
+    - rvm: jruby-head
+
+notifications:
+  irc: "irc.freenode.org#datamapper"

@@ -27,7 +27,11 @@ module SQL
       true
     end
 
-    def change_column_type_statement(*args)
+    def change_column_type_statement(*)
+      raise NotImplementedError
+    end
+
+    def rename_column_type_statement(*)
       raise NotImplementedError
     end
 

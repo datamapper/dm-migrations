@@ -65,10 +65,8 @@ module DataMapper
         def property_schema_hash(property)
           schema = super
 
-          primitive = property.primitive
-
           # Postgres does not support precision and scale for Float
-          if primitive == Float
+          if property.kind_of?(Property::Float)
             schema.delete(:precision)
             schema.delete(:scale)
           end

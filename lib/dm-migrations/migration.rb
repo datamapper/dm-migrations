@@ -138,6 +138,26 @@ module DataMapper
       end
     end
 
+    #
+    # Execute raw SQL and return a result set.
+    #
+    # @param [String] sql
+    #   The raw SQL statement.
+    #
+    # @param [Array] bind_values
+    #   Additional values to bind to the statement.
+    #
+    # @return [Array<Struct>]
+    #   The result set.
+    #
+    # @since 1.3.0
+    #
+    def select(sql, *bind_values)
+      say_with_time(sql) do
+        adapter.select(sql, *bind_values)
+      end
+    end
+
     def create_table(table_name, opts = {}, &block)
       execute TableCreator.new(adapter, table_name, opts, &block).to_sql
     end

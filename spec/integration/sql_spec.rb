@@ -131,23 +131,60 @@ describe "SQL generation" do
     describe DataMapper::Migration, "#modify_table helper" do
       before do
         @migration = DataMapper::Migration.new(1, :create_people_table, :verbose => false) { }
-
       end
 
       it "should have a #modify_table helper" do
         @migration.should respond_to(:modify_table)
       end
 
-      case DataMapper::Spec.adapter_name.to_sym
-      when :postgres
+      describe '#change_column' do
         before do
           @modifier = DataMapper::Migration::TableModifier.new(@adapter, :people) do
             change_column :name, 'VARCHAR(200)'
           end
         end
 
-        it "should alter the column" do
-          @modifier.to_sql.should == %q{ALTER TABLE "people" ALTER COLUMN "name" VARCHAR(200)}
+        case DataMapper::Spec.adapter_name.to_sym
+        when :mysql
+          it 'alters the column' do
+            @modifier.to_sql.should == %q{ALTER TABLE `people` MODIFY COLUMN `name` VARCHAR(200)}
+          end
+        when :postgres
+          it 'alters the column' do
+            @modifier.to_sql.should == %q{ALTER TABLE "people" ALTER COLUMN "name" VARCHAR(200)}
+          end
+        end
+      end
+
+      describe "#rename_column" do
+        case DataMapper::Spec.adapter_name.to_sym
+        when :postgres
+          before do
+            @modifier = DataMapper::Migration::TableModifier.new(@adapter, :people) do
+              rename_column :name, :first_name
+            end
+          end
+
+          it "should rename the column" do
+            @modifier.to_sql.should == %q{ALTER TABLE "people" RENAME COLUMN "name" TO "first_name"}
+          end
+        when :mysql
+          before do
+            # create the table so the existing column schema can be instrospected
+            @adapter.execute("CREATE TABLE `people` (name VARCHAR(50) DEFAULT 'John' NOT NULL)")
+
+            @modifier = DataMapper::Migration::TableModifier.new(@adapter, :people) do
+              rename_column :name, :first_name
+            end
+          end
+
+          after do
+            @adapter.execute('DROP TABLE `people`')
+          end
+
+          it "should change the column" do
+            @modifier.to_sql.should == %q{ALTER TABLE `people` CHANGE `name` `first_name` varchar(50) DEFAULT 'John' NOT NULL}
+          end
         end
       end
     end

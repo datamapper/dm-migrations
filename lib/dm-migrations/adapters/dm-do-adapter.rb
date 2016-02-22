@@ -195,16 +195,16 @@ module DataMapper
 
         # @api private
         def property_schema_hash(property)
-          primitive = property.primitive
-          type_map  = self.class.type_map
+          dump_class = property.dump_class
+          type_map   = self.class.type_map
 
-          schema = (type_map[property.class] || type_map[property.class.superclass] || type_map[primitive]).merge(:name => property.field)
+          schema = (type_map[property.class] || type_map[dump_class]).merge(:name => property.field)
 
           schema_primitive = schema[:primitive]
 
-          if primitive == String && schema_primitive != 'TEXT' && schema_primitive != 'CLOB' && schema_primitive != 'NVARCHAR' && schema_primitive != 'VARBINARY'
+          if dump_class.equal?(String) && schema_primitive != 'TEXT' && schema_primitive != 'CLOB' && schema_primitive != 'NVARCHAR' && schema_primitive != 'BYTEA' && schema_primitive != 'VARBINARY'
             schema[:length] = property.length
-          elsif primitive == BigDecimal || primitive == Float
+          elsif dump_class.equal?(BigDecimal) || dump_class.equal?(Float)
             schema[:precision] = property.precision
             schema[:scale]     = property.scale
           end
@@ -239,8 +239,13 @@ module DataMapper
             statement << "(#{connection.quote_value(length)})"
           end
 
-          statement << " DEFAULT #{connection.quote_value(schema[:default])}" if schema.key?(:default)
+          default = schema[:default]
+          if default
+            statement << " DEFAULT #{connection.quote_value(default)}"
+          end
+
           statement << ' NOT NULL' unless schema[:allow_nil]
+
           statement
         end
 
