@@ -40,9 +40,8 @@ module DataMapper
         end
 
         # @api private
-        def schema_name
-          # TODO: is there a cleaner way to find out the current DB we are connected to?
-          @options[:path].split('/').last
+        def schema_name          
+          select('SELECT DB_NAME()')
         end
 
         # TODO: update dkubb/dm-more/dm-migrations to use schema_name and remove this
@@ -56,9 +55,9 @@ module DataMapper
             (#{properties.map { |property| property_schema_statement(connection, property_schema_hash(property)) }.join(', ')}
           SQL
 
-          unless properties.any? { |property| property.serial? }
+            # specific the primary keys.
+            # don't have to filter out Serial (aka IDENTITY) type
             statement << ", PRIMARY KEY(#{properties.key.map { |property| quote_name(property.field) }.join(', ')})"
-          end
 
           statement << ')'
           statement
@@ -73,6 +72,16 @@ module DataMapper
             max = property.max
 
             schema[:primitive] = integer_column_statement(min..max) if min && max
+          end
+
+          schema_primitive = schema[:primitive]
+          
+          if schema_primitive == 'NVARCHAR'
+            if property.length <= 4000
+              schema[:length] = property.length
+            else
+              schema[:length] = 'max'
+            end
           end
 
           if schema[:primitive] == 'TEXT'
@@ -163,11 +172,13 @@ module DataMapper
           scale     = Property::Decimal.scale
 
           super.merge(
-            DateTime       => { :primitive => 'DATETIME'                   },
-            Date           => { :primitive => 'SMALLDATETIME'              },
-            Time           => { :primitive => 'SMALLDATETIME'              },
-            TrueClass      => { :primitive => 'BIT',                       },
-            Property::Text => { :primitive => 'NVARCHAR', :length => 'max' }
+            DateTime       => { :primitive => 'DATETIME'                      },
+            Date           => { :primitive => 'SMALLDATETIME'                 },
+            Time           => { :primitive => 'SMALLDATETIME'                 },
+            TrueClass      => { :primitive => 'BIT',                          },
+            String           => { :primitive => 'NVARCHAR', :length => length },
+            Property::Text => { :primitive => 'NVARCHAR', :length => 'max'    },
+            Property::Binary => { :primitive => 'VARBINARY', :length => 'max' } 
           ).freeze
         end
       end
