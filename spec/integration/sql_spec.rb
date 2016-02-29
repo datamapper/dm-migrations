@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+class MyCustomProperty < DataMapper::Property::Text; end # Column type is expected to be inherited from DataMapper::Property::Text (CLOB, TEXT or whatever)
+
 describe "SQL generation" do
 
   supported_by :postgres, :mysql, :sqlite, :oracle, :sqlserver do
@@ -23,6 +25,7 @@ describe "SQL generation" do
           column :id,          DataMapper::Property::Serial
           column :name,        'VARCHAR(50)', :allow_nil => false
           column :long_string, String, :size => 200
+          column :very_custom,  MyCustomProperty
         end
       end
 
@@ -46,7 +49,7 @@ describe "SQL generation" do
 
       it "should have an array of columns" do
         @creator.instance_eval("@columns").should be_kind_of(Array)
-        @creator.instance_eval("@columns").size.should == 3
+        @creator.instance_eval("@columns").size.should == 4
         @creator.instance_eval("@columns").first.should be_kind_of(DataMapper::Migration::TableCreator::Column)
       end
 
@@ -68,7 +71,7 @@ describe "SQL generation" do
       when :mysql
         it "should create an InnoDB database for MySQL" do
           #can't get an exact == comparison here because character set and collation may differ per connection
-          @creator.to_sql.should match(/^CREATE TABLE `people` \(`id` SERIAL PRIMARY KEY, `name` VARCHAR\(50\) NOT NULL, `long_string` VARCHAR\(200\)\) ENGINE = InnoDB CHARACTER SET \w+ COLLATE \w+\z/)
+          @creator.to_sql.should match(/^CREATE TABLE `people` \(`id` SERIAL PRIMARY KEY, `name` VARCHAR\(50\) NOT NULL, `long_string` VARCHAR\(200\), `very_custom` TEXT\) ENGINE = InnoDB CHARACTER SET \w+ COLLATE \w+\z/)
         end
 
         it "should allow for custom table creation options for MySQL" do
@@ -100,11 +103,11 @@ describe "SQL generation" do
 
       when :postgres
         it "should output a CREATE TABLE statement when sent #to_sql" do
-          @creator.to_sql.should == %q{CREATE TABLE "people" ("id" SERIAL PRIMARY KEY, "name" VARCHAR(50) NOT NULL, "long_string" VARCHAR(200))}
+          @creator.to_sql.should == %q{CREATE TABLE "people" ("id" SERIAL PRIMARY KEY, "name" VARCHAR(50) NOT NULL, "long_string" VARCHAR(200), "very_custom" TEXT)}
         end
-      when :sqlite3
+      when :sqlite3, :sqlite
         it "should output a CREATE TABLE statement when sent #to_sql" do
-          @creator.to_sql.should == %q{CREATE TABLE "people" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "name" VARCHAR(50) NOT NULL, "long_string" VARCHAR(200))}
+          @creator.to_sql.should == %q{CREATE TABLE "people" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "name" VARCHAR(50) NOT NULL, "long_string" VARCHAR(200), "very_custom" TEXT)}
         end
       end
 

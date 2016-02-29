@@ -112,7 +112,7 @@ module DataMapper
       end
 
       module SQL #:nodoc:
-#        private  ## This cannot be private for current migrations
+        #        private  ## This cannot be private for current migrations
 
         # Adapters that support AUTO INCREMENT fields for CREATE TABLE
         # statements should overwrite this to return true
@@ -197,8 +197,14 @@ module DataMapper
         def property_schema_hash(property)
           dump_class = property.dump_class
           type_map   = self.class.type_map
+          next_property_class = property.class
+          type_by_property_class = nil
+          while (type_by_property_class.nil? && next_property_class < DataMapper::Property) do
+            type_by_property_class = type_map[next_property_class]
+            next_property_class = next_property_class.superclass
+          end
 
-          schema = (type_map[property.class] || type_map[dump_class]).merge(:name => property.field)
+          schema = (type_by_property_class || type_map[dump_class]).merge(:name => property.field)
 
           schema_primitive = schema[:primitive]
 

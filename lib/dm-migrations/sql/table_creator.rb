@@ -84,12 +84,19 @@ module SQL
         else
           type_map  = @adapter.class.type_map
           primitive = type_class.respond_to?(:dump_as) ? type_class.dump_as : type_class
-          options   = (type_map[type_class] || type_map[primitive])
+          next_property_class = type_class
+          type_by_property_class = nil
+          while (type_by_property_class.nil? && next_property_class < DataMapper::Property) do
+            type_by_property_class = type_map[next_property_class]
+            next_property_class = next_property_class.superclass
+          end
+
+          options   = (type_by_property_class || type_map[primitive])
 
           schema.update(type_class.options) if type_class.respond_to?(:options)
           schema.update(options)
 
-          schema.delete(:length) if type_class == DataMapper::Property::Text
+          schema.delete(:length) if type_class <= DataMapper::Property::Text
         end
 
         schema.update(@opts)
