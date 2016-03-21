@@ -2,6 +2,16 @@
 
 DataMapper plugin for writing and specing migrations.
 
+- Foreign Keys support:
+- foreign_key_exists? table_name, foreign_key
+- table_exists? table
+- table_column_exists? table, column
+- enable_foreign_key_checks
+- disable_foreign_key_checks
+
+
+
+
 == Example
 
   require 'dm-migrations/migration_runner'
@@ -13,14 +23,30 @@ DataMapper plugin for writing and specing migrations.
 
   migration 1, :create_people_table do
     up do
+      # Check if table exists
+      if table_exists? :positions
+        create_table :jobs do
+          column :id,   Integer, :serial => true
+          column :name, String
+        end
+      end
       create_table :people do
         column :id,   Integer, :serial => true
         column :desc, String
+        column :job_id
+      end
+      if table_column_exists? :people, :jobs_id
+        modify_table :people do
+          add_foreign_key :job_id, :jobs
+        end
       end
     end
 
     down do
+      disable_foreign_key_checks
       drop_table :people
+      drop_table :jobs
+      enable_foreign_key_checks
     end
   end
 
@@ -30,6 +56,8 @@ DataMapper plugin for writing and specing migrations.
         # You currently have to use the underlying DB type here, rather than
         # a DataMapper type
         change_column :desc, 'text'
+        
+        drop_foreign_key :job_id, :jobs
       end
     end
   end

@@ -157,7 +157,15 @@ module DataMapper
         adapter.select(sql, *bind_values)
       end
     end
-
+    
+    def disable_foreign_key_checks
+      execute "SET foreign_key_checks = 0"
+    end
+    
+    def enable_foreign_key_checks
+      execute "SET foreign_key_checks = 1"
+    end
+    
     def create_table(table_name, opts = {}, &block)
       execute TableCreator.new(adapter, table_name, opts, &block).to_sql
     end
@@ -246,6 +254,14 @@ module DataMapper
 
     def migration_info_table_exists?
       adapter.storage_exists?('migration_info')
+    end
+    
+    def table_exists? name
+      adapter.storage_exists?(name.to_s)
+    end
+    
+    def table_column_exists? table, column
+      adapter.field_exists?(table.to_s, column.to_s)
     end
 
     # Fetch the record for this migration out of the migration_info table
