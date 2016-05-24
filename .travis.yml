@@ -28,6 +28,7 @@ services:
   - postgresql
 
 before_install:
+  - gem install bundler
   - travis_retry sudo apt-get update -qq
   - sudo apt-get install -qq postgresql-server-dev-all
 
