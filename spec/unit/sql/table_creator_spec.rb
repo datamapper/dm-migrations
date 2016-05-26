@@ -63,6 +63,7 @@ describe 'SQL module' do
 
         @adapter.stub!(:quote_column_name).and_return(%{'id'})
         @adapter.class.stub!(:type_map).and_return(Integer => {:type => 'int'})
+        @adapter.class.stub!(:type_by_property_class).and_return(Integer => {:type => 'int'})
         @adapter.stub!(:property_schema_statement).and_return("SOME SQL")
         @adapter.stub!(:with_connection).and_yield(connection)
         @c = SQL::TableCreator::Column.new(@adapter, 'id', Integer, :serial => true)

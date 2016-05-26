@@ -196,9 +196,9 @@ module DataMapper
         # @api private
         def property_schema_hash(property)
           dump_class = property.dump_class
-          type_map   = self.class.type_map
+          type_by_property_class = self.class.type_by_property_class(property.class)
 
-          schema = (type_map[property.class] || type_map[dump_class]).merge(:name => property.field)
+          schema = (type_by_property_class || self.class.type_map[dump_class]).merge(:name => property.field)
 
           schema_primitive = schema[:primitive]
 
@@ -292,6 +292,17 @@ module DataMapper
             TrueClass        => { :primitive => 'BOOLEAN'                                           },
             Property::Text   => { :primitive => 'TEXT'                                              },
           }.freeze
+        end
+
+        # Finds a type for a given property.
+        #
+        # @return [Hash | nil] type matching the given property or one of the properties ancestors
+        #
+        # @api private
+        def type_by_property_class(property_class)
+          return nil unless property_class < DataMapper::Property
+
+          type_map[property_class] || type_by_property_class(property_class.superclass)
         end
       end
     end
