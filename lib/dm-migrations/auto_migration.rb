@@ -42,9 +42,11 @@ module DataMapper
       # @api private
       def repository_execute(method, repository_name)
         models = DataMapper::Model.descendants
-        models = models.select { |m| m.default_repository_name == repository_name } if repository_name
+        if repository_name
+          models = models.select { |m| m.repository_name == repository_name }
+        end
         models.each do |model|
-          model.send(method, model.default_repository_name)
+          model.send(method, model.repository_name)
         end
       end
     end

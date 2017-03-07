@@ -1,6 +1,38 @@
 require 'spec_helper'
 
 describe 'Migration' do
+
+  describe 'repository_execute' do
+    before(:each) do
+      class DefaultKlass
+        include DataMapper::Resource
+        property :required_property, String, key: true
+      end
+
+      class ContextKlass
+        include DataMapper::Resource
+        property :required_property, String, key: true
+        def self.repository_name
+          :not_default_repository
+        end
+      end
+    end
+
+    it 'shoud send the method to all models by default' do
+      DataMapper.finalize
+      DefaultKlass.should_receive(:auto_migrate!).with(:default)
+      ContextKlass.should_receive(:auto_migrate!).with(:not_default_repository)
+      DataMapper.auto_migrate!
+    end
+
+    it 'should send the method to only repository models if a repository_name is given' do
+      DataMapper.finalize
+      DefaultKlass.should_not_receive(:auto_migrate!)
+      ContextKlass.should_receive(:auto_migrate!).with(:not_default_repository)
+      DataMapper.auto_migrate!(:not_default_repository)
+    end
+  end
+
   supported_by :postgres, :mysql, :sqlite do
     before do
       @adapter = mock('adapter', :class => DataMapper::Spec.adapter.class)
